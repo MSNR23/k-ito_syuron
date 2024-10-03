@@ -1,0 +1,191 @@
+%%% definitions by Ikuo Mizuuchi
+\def\HLINE{\noalign{\hrule height 1.5pt}}
+\def\Hline{\noalign{\hrule height .9pt}}
+\def\smallhline{\noalign{\hrule height .1pt}}
+
+\newcommand{\figref}[1]{{図\ref{fig:#1}}}
+\newcommand{\tabref}[1]{{表\ref{tab:#1}}~}
+\newcommand{\equref}[1]{{式(\ref{equ:#1})}}
+
+\newcommand{\chapref}[1]{第{\bf\ref{chap:#1}}章}
+\newcommand{\secref}[1]{{\bf\ref{sec:#1}}節}
+\newcommand{\subsecref}[1]{{\bf\ref{subsec:#1}}節}
+\newcommand{\subsubsecref}[1]{{\bf\ref{subsubsec:#1}}}
+\newcommand{\termref}[1]{\ref{term:#1}}
+\newcommand{\enumref}[1]{{\ref{enum:#1}.}}
+\newcommand{\Pageref}[1]{p.{\pageref{Page:#1}}}
+\newcommand{\sgn}{\mbox{sgn}}
+\newcommand{\degree}{$^\circ$}
+
+\newcommand{\chaplabel}[1]{\label{chap:#1}}
+\newcommand{\seclabel}[1]{\label{sec:#1}}
+\newcommand{\subseclabel}[1]{\label{subsec:#1}}
+\newcommand{\subsubseclabel}[1]{\label{subsubsec:#1}}
+\newcommand{\figlabel}[1]{\label{fig:#1}}
+\newcommand{\tablabel}[1]{\label{tab:#1}}
+\newcommand{\equlabel}[1]{\label{equ:#1}}
+\newcommand{\enumlabel}[1]{\label{enum:#1}}
+\newcommand{\appendixlabel}[1]{\label{Appendix:#1}}
+\newcommand{\Pagelabel}[1]{\label{Page:#1}}
+
+% \newcommand{\pastefig}[2]{\epsfile{file=#1,#2}}
+\newcommand{\pastefig}[2]{\includegraphics[#2]{#1}}
+%% \newcommand{\vspacebeforefig}[0]{\vspace*{-2mm}}
+%% \newcommand{\vspaceafterfig}[0]{\vspace*{-2mm}}
+\newcommand{\vspacebeforefig}[0]{}
+\newcommand{\vspaceafterfig}[0]{}
+\newcommand{\vspacebetweenfig}[0]{\vspace*{2mm}}
+
+
+\newcommand{\fig}[3]{%
+ \begin{figure}[tbp]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \vspacebeforefig
+   \caption{#3}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\twofigs}[5]{%
+ \begin{figure}[tbp]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}\\%
+   \vspacebetweenfig%
+   \pastefig{\FIGDIR/#3}{#4}%
+   \vspacebeforefig
+   \caption{#5}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\figthrough}[3]{%
+ \begin{figure*}[tbp]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \vspacebeforefig
+   \caption{#3}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure*}%
+}
+
+\newcommand{\figb}[3]{%
+ \begin{figure}[b]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \vspacebeforefig
+   \caption{#3}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\figpos}[4]{%
+ \begin{figure}[#4]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \vspacebeforefig
+   \caption{#3}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\doublefig}[5]{%
+ \begin{figure}[tb]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \hspace*{2mm}%
+   \pastefig{\FIGDIR/#3}{#4}%
+   \vspacebeforefig
+   \caption{#5}%
+   \figlabel{#1}%
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\doublefigt}[5]{%
+ \begin{figure}[tb]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}\\%
+   \pastefig{\FIGDIR/#3}{#4}%
+   \vspacebeforefig
+   \caption{#5}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\doublefigb}[5]{%
+ \begin{figure}[b]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \hspace*{2mm}%
+   \pastefig{\FIGDIR/#3}{#4}%
+   \vspacebeforefig
+   \caption{#5}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\doublefigthrough}[5]{%
+ \begin{figure*}[t]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \hspace*{8mm}%
+   \pastefig{\FIGDIR/#3}{#4}%
+%%    \vspacebeforefig
+   \caption{#5}%
+   \figlabel{#1}%
+  \end{center}%
+ \end{figure*}%
+}
+
+\newcommand{\triplefig}[7]{%
+  \begin{figure}[tbp]%
+%     \leavevmode
+    \begin{center}%
+      \pastefig{\FIGDIR/#1}{#2}%
+      \hspace*{2mm}%
+      \pastefig{\FIGDIR/#3}{#4}%
+      \hspace*{2mm}%
+      \pastefig{\FIGDIR/#5}{#6}%
+    %\vspace{-5mm}
+    \vspacebeforefig
+    \caption{#7}%
+    \figlabel{#1}%
+    \vspaceafterfig
+    \end{center}%
+    %\vspace{5mm}
+\end{figure}}
+
+\newcommand{\triplefigthrough}[7]{%
+  \begin{figure*}[tbp]%
+%     \leavevmode
+    \begin{center}%
+      \pastefig{\FIGDIR/#1}{#2}%
+      \hspace*{2mm}%
+      \pastefig{\FIGDIR/#3}{#4}%
+      \hspace*{2mm}%
+      \pastefig{\FIGDIR/#5}{#6}%
+    %\vspace{-5mm}
+    \vspacebeforefig
+    \caption{#7}%
+    \figlabel{#1}%
+    \vspaceafterfig
+    \end{center}%
+    %\vspace{5mm}
+  \end{figure*}}
+
+%%% end of my definitions

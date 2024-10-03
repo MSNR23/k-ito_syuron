@@ -1,0 +1,234 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 卒論中間・卒論前刷・修論中間、全部同じなのに、
+%% ファイルが３つあったので、共通の部分を取り出した。by 水内（2020年春）
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 東京農工大学　工学部　機械システム工学科　卒論発表前刷り用スタイルファイル
+% Thanks to 佐久間先生 and 佐久間研の皆さん
+% 書式設定部分のみ分離＆いくつかコマンド定義＆微修正 by 本堂
+% 中間発表前刷り用スタイルを卒論発表用に改造 by 本堂
+% 2013年度版でテンプレートに変更点があったので修正 by 恒岡
+% 2016年度版でテンプレートに変更点があったので修正 by 熊谷
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[a4paper,twocolumn,twoside,fleqn,leqno,10pt,dvipdfmx]{jarticle}
+
+\usepackage[dvipdfmx]{graphicx}
+\usepackage[dvipdfmx]{color}
+\usepackage{bm}
+\usepackage{fancyhdr}
+%\usepackage{nidanfloat}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+\usepackage[dvipdfmx]{hyperref}  % 目次や参考文献をリンクにする。
+\hypersetup{bookmarksnumbered=true}
+\hypersetup{colorlinks=true}
+\hypersetup{linkcolor=black}
+\hypersetup{citecolor=black}
+
+\usepackage{url} % \url のために必要。パッケージが無い人は探して入れる。
+%% \url{http://nile.ulis.ac.jp/~yuka/}のようにして使う。
+
+\hypersetup{urlbordercolor={1 1 1}} %（ここから）URLがマゼンダで表示されちゃうのを黒に直す
+\hypersetup{bookmarksnumbered=true}
+\hypersetup{linkcolor={0 0 0}}
+\hypersetup{linkbordercolor={1 1 1}}
+\hypersetup{colorlinks=false}
+\hypersetup{citebordercolor={1 1 1}}%URLがマゼンダで表示されちゃうのを
+                                %黒に直す（ここまで）
+
+%微分演算子関係
+\newcommand{\dd}{\mathrm{d}} %微分演算子の"d"はローマン体
+\newcommand{\diff}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}} %常微分
+\newcommand{\ddiff}[3]{\frac{\mathrm{d}^#1 #2}{\mathrm{d} #3^#1}} %高階常微分
+\newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}} %偏微分
+\newcommand{\pddiff}[3]{\frac{\partial^#1 #2}{\partial #3^#1}} %高階偏微分
+
+% 以下書式設定(一般) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\hoffset}{-5mm}
+\setlength{\voffset}{-9mm}
+\setlength{\oddsidemargin}{0mm}
+\setlength{\evensidemargin}{\oddsidemargin}
+\setlength{\topmargin}{0mm}
+\setlength{\headheight}{0mm}
+\setlength{\headsep}{0mm}
+\setlength{\textwidth}{180mm}
+\setlength{\textheight}{255mm}
+\setlength{\columnsep}{10mm}
+\setlength{\topskip}{19.00pt}
+\setlength{\mathindent}{4mm}
+%\setlength{\kanjiskip}{0.00zw plus.1zw}
+\setlength{\kanjiskip}{0.05zw plus.1zw}
+
+\setlength{\floatsep}{3pt plus 1pt minus 1pt}
+\setlength{\textfloatsep}{5pt plus 1pt minus 0.5pt}
+\setlength{\intextsep}{5pt plus 1pt minus 0.5pt}
+\setlength{\dblfloatsep}{3pt plus 1pt minus 1pt}
+\setlength{\dbltextfloatsep}{3pt plus 1pt minus 1pt}
+
+\setlength{\parskip}{0pt}
+\setlength{\parindent}{1zw}
+\setlength{\partopsep}{0pt}
+
+% 英文概要設定 %
+\def\abstract{\list{}{\listparindent=1zw \itemindent=\listparindent%
+\leftmargin=5mm \rightmargin=\leftmargin}\item[]
+\let\endabstract\endlist}
+
+% 脚注の設定 %
+\def\thefootnote{}
+
+% 各節タイトル %
+\def\thesection {\arabic{section}.}
+\def\thesubsection {\arabic{section}$\,\cdot\,$\arabic{subsection}}
+\def\thesubsubsection {\thesubsection$\,\cdot\,$\arabic{subsubsection}}
+
+% 数式環境 %
+\newdimen\vs % 機械学会書式(added by A.Sakuma)
+\def\gyo[#1]{\\ \vbox to#1\vs\bgroup\vss}
+\def\endgyo{\vss\egroup\vspace{-1.2mm}}%
+\def\LABEL#1{\dotfill\hspace*{9.0mm}\label{#1}}
+\def\LABELW#1{\dotfill\hspace*{23.0mm}\label{#1}}
+\def\DOTFILL#1{\unitlength=1mm\begin{picture}(#1,3)
+ \put(0,0){\makebox(#1,1.5)[b]{\dotfill}}\end{picture}}
+
+% 図の配置設定 %
+\def\topfraction{1.0} % 機械学会書式(changed by A.Sakuma)
+\setcounter{bottomnumber}{6} % 機械学会書式(changed by A.Sakuma)
+\def\bottomfraction{1.0} % 機械学会書式(changed by A.Sakuma)
+\setcounter{totalnumber}{8} % 機械学会書式(changed by A.Sakuma)
+\def\textfraction{0.0} % 機械学会書式(changed by A.Sakuma)
+\def\floatpagefraction{0.7} % 機械学会書式(changed by A.Sakuma)
+\setcounter{dbltopnumber}{8}% 機械学会書式(changed by A.Sakuma)
+\def\dbltopfraction{1.0} % 機械学会書式(changed by A.Sakuma)
+\def\dblfloatpagefraction{0.7} % 機械学会書式(changed by A.Sakuma)
+% ```````````````````````````````````````````````````````
+% 以下書式設定(特殊) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+
+% 各節タイトル %
+\def\section{\@startsection {section}{1}{0.0ex}{1.62ex}{1.62ex}{\center\bf}}%%セクションを太字に2018諸岡
+\def\subsection{\@startsection{subsection}{2}{0.0ex}{1.0ex}{.5ex}{\rm}}%タイトルの後改行
+%タイトルを中央揃えにする場合は@startsectionの第6引数を{\center\bf}にする
+\def\subsubsection{\@startsection{subsubsection}{3}{3.0ex}{0.0ex}{-6.0ex}{\rm}}
+
+\def\quote{\list{}{\rightmargin=10mm \leftmargin=\rightmargin}\item[]}%
+\long\def\@makecaption#1#2{
+\vskip 10pt 
+\setbox\@tempboxa\hbox{#1  #2}
+\ifdim \wd\@tempboxa >\hsize \settowidth{\labelwidth}{#1} \textwidth=\hsize
+\addtolength{\textwidth}{-\labelwidth}\addtolength{\textwidth}{-6pt}
+\tabcolsep=2pt\begin{tabular*}{\hsize}{@{\extracolsep{\fill}}lp{\textwidth}}
+ #1&\setlength{\baselineskip}{9.0pt}\setlength{\lineskip}{-0.5pt}#2\\
+ \end{tabular*}\par\else\hbox to\hsize{\hfil\box\@tempboxa\hfil} \fi}
+
+\def\fnum@figure{\small{Fig.\thefigure}}
+
+% 引用の設定 %
+\def\@cite#1#2{$^{\hbox{\scriptsize({#1\if@tempswa , #2\fi})}}$}
+\def\thebibliography#1{\section*{{\bf 文　　献}\@mkboth
+ {REFERENCES}{REFERENCES}}\list
+% {(\hfill\arabic{enumi}\hfill)}{\settowidth\labelwidth{1pt} \leftmargin 30pt
+ {(\hfill\arabic{enumi}\hfill)}{\settowidth\labelwidth{1pt} \leftmargin\labelwidth %文献のインデントを左端にした。
+ \advance\leftmargin\labelsep
+ \usecounter{enumi}}
+ \def\newblock{\hskip .11em plus .33em minus .07em}
+ \sloppy\clubpenalty4000\widowpenalty4000
+ \sfcode`\.=1000\relax}
+
+% 数式環境 %
+\def\@eqnnum{\hbox to .01pt{}
+ \rlap{\rm \hskip -0.125\displaywidth(\theequation)}}
+\def\eqnarray{\stepcounter{equation}\def\@currentlabel{\p@equation\theequation}%
+ \global\@eqnswtrue\m@th\global\@eqcnt\z@\tabskip\@centering\let\\\@eqncr
+ $$\everycr{}\halign to\displaywidth\bgroup\hskip\@centering$\displaystyle
+ \tabskip\z@skip{##}$\@eqnsel&\global\@eqcnt\@ne \hfil$\displaystyle{{}##{}}$\hfil
+ &\global\@eqcnt\tw@ $\displaystyle{##}$\hfil\tabskip\@centering
+ &\global\@eqcnt\thr@@ \hb@xt@\z@\bgroup\hss##\egroup\tabskip\z@skip\cr}  
+\def\@eqnnum{\hbox to .01pt{}%
+ \rlap{\rm \hskip -0.10\displaywidth(\theequation)}}
+\def\fnum@table{Table \thetable.}
+\def\thetable{\@arabic\c@table}
+
+%% Figure 環境中で Table 環境の見出しを表示・カウンタの操作に必
+\newcommand{\figcaption}[1]{\def\@captype{figure}\caption{#1}}
+\newcommand{\tblcaption}[1]{\def\@captype{table}\caption{#1}}
+
+\makeatother
+
+\usepackage{ifthen}
+\newcommand{\secret}[2]{
+  \ifthenelse{\equal{#1}{m}}{
+    \thispagestyle{fancy}
+    \lhead{
+      \vspace{-10mm}
+      \begin{picture}(0,0)
+        \fboxrule=0.5mm
+        \hspace{#2}\fcolorbox{red}{white}{{\large {\bf \textcolor{red}{専攻外秘}}}}
+    \end{picture}
+    }
+  }{
+    \thispagestyle{fancy}
+    \lhead{
+      \vspace{-10mm}
+      \begin{picture}(0,0)
+        \fboxrule=0.5mm
+        \hspace{#2}\fcolorbox{red}{white}{{\large {\bf \textcolor{red}{学科外秘}}}}
+      \end{picture}
+    }
+  }
+}
+
+\newcommand{\pagenum}[1]{%
+\chead{}
+\rhead{ \sf{#1} }%%フォントを変更2018諸岡
+\lfoot{}
+% \cfoot{ \bf{#1} } %ページ数
+\cfoot{}
+\rfoot{}
+}
+
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\newcommand{\smallcap}[1]{\vspace{-1pt}\caption{{\footnotesize #1}}}
+
+\pagestyle{empty}
+\renewcommand{\title}[2]{
+%\twocolumn[%
+ \begin{center}
+ {\Large\bf #1}\\%日本語タイトルも太字に変更2018諸岡
+ {\bf #2}%英語タイトル太字に変更
+\end{center}
+\vspace{-5mm}
+}
+
+\renewcommand{\author}[3]{
+ \begin{flushright}
+  \begin{small}
+    #1\hspace{6mm}#2\hspace{3mm}#3\\
+%% #1　　#2　
+%% #3　　　\\
+  \end{small}
+ \end{flushright}
+}
+
+% キーワード
+\newcommand{\keyword}[1]{
+ \begin{center}{\small
+  \begin{tabular*}{150mm}{lp{140mm}}
+    \hspace{-17mm}\sl{Key Words} %%Key Word(細字イタリック)に変更2018諸岡
+    \rm{: #1}
+  \end{tabular*}
+ }\end{center}
+\vspace{-3mm}
+}
+
+\usepackage{setspace}
+\renewenvironment{abstract}{\begin{small}\begin{spacing}{1}\hspace{6mm}}{\end{spacing}\end{small}\vspace{-3mm}}
+
+\setlength{\vs}{\baselineskip}
+\vspace{-\baselineskip}
+\setlength{\baselineskip}{4.30mm}

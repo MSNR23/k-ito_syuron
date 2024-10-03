@@ -1,0 +1,55 @@
+\documentclass[11pt]{jsk-thesis}
+
+%レイアウト補正
+%\usepackage{layout}
+%\setlength \voffset {-1.0cm}
+%\setlength \hoffset {-1.2cm}
+%\setlength \textwidth {17cm}
+%\setlength \textheight {24cm}
+
+%パッケージ読み込み
+\usepackage[dvipdfmx]{graphicx}
+\usepackage[dvipdfmx]{color}
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{bm}
+\usepackage{url}
+
+%コマンド定義
+%表の日付のフォントサイズ変更
+\newcommand{\tdate}[1]{\scriptsize{#1}}
+%単位"°"
+%%\newcommand{\degree}[1]{#1^{\circ}}
+%微分演算子関係
+\newcommand{\dd}{\mathrm{d}}
+\newcommand{\diff}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}} %常微分
+\newcommand{\diffline}[2]{\mathrm{d}#1/\mathrm{d}#2} %文章中での常微分
+\newcommand{\ddiff}[3]{\frac{\mathrm{d}^#1 #2}{\mathrm{d} #3^#1}} %高階常微分
+\newcommand{\ddiffline}[3]{\mathrm{d}^#1 #2/\mathrm{d} #2^#1} %文章中での高階常微分
+\newcommand{\pdiff}[2]{\frac{\partial #1}{\partial #2}} %偏微分
+\newcommand{\pddiff}[3]{\frac{\partial^#1 #2}{\partial #3^#1}} %高階偏微分
+\newcommand{\non}[1]{#1^{*}} %無次元化変数
+
+%関数
+\newcommand{\erf}{\mathrm{erf}}
+
+%その他
+\newcommand{\myfig}[5]{
+  \begin{figure}[#1]%
+    \begin{center}%
+      \includegraphics[width=#2]{#3}%
+      \caption{#4}%
+      \label{fig:#5}%
+    \end{center}%
+  \end{figure}%
+}
+%% \newcommand{\figref}[1]{Fig.\ref{fig:#1}}
+%% \newcommand{\seclabel}[1]{\label{sec:#1}}
+%% \newcommand{\secref}[1]{第{\bf\ref{sec:#1}}節}
+
+\newcommand{\unit}[1]{\,[\mathrm{#1}]}
+
+%見出し変更
+\renewcommand{\figurename}{Fig.}
+\renewcommand{\tablename}{Table}

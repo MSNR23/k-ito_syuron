@@ -1,0 +1,52 @@
+\include{my_layout_grad}
+
+
+\usepackage{ikuo}%%便利コマンド集．
+
+\usepackage[dvipdfmx]{hyperref}  % 目次や参考文献をリンクにする。
+\usepackage{pxjahyper} %% これを入れるとしおりが文字化けしない。out2uniが不要になる。
+%% \hypersetup{bookmarksnumbered=true}
+\hypersetup{colorlinks=true}
+\hypersetup{linkcolor=black}
+%% \hypersetup{linkbordercolor=black}
+\hypersetup{urlcolor=black}
+%% \hypersetup{urlbordercolor=black}
+\hypersetup{citecolor=black}
+%% \hypersetup{citebordercolor=black}
+
+\usepackage{url} % \url のために必要。パッケージが無い人は探して入れる。
+%% \url{http://nile.ulis.ac.jp/~yuka/}のようにして使う。
+
+\newcommand{\FIGDIR}{./fig}        %図を置くディレクトリを指定する
+
+
+\date{令和6年度卒業論文}
+\title{卒論執筆に関する研究}
+\author{指導教員　水内　郁夫　准教授 \\
+\ \\
+東京農工大学　\\
+工学部　機械システム工学科　\\
+\ \\
+平成32年度入学\\
+12345678\\
+{\bf 山田　太郎}}
+
+\begin{document}
+\setlength{\baselineskip}{20pt}
+\maketitle
+\tableofcontents
+
+%%各章は別ファイルにして以下にinculudeすると良い．
+\include{introduction}
+\include{fig_tab_equ}
+
+\addcontentsline{toc}{chapter}{謝辞}
+\markboth{謝辞}{謝辞}
+\include{thanks}
+
+\addcontentsline{toc}{chapter}{参考文献}
+\markboth{参考文献}{参考文献}
+\bibliographystyle{junsrt}
+\bibliography{reference}
+
+\end{document}

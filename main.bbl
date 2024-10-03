@@ -1,0 +1,19 @@
+\begin{thebibliography}{1}
+
+\bibitem{Ikuo:doctor}
+水内郁夫.
+\newblock 柔軟性可変な脊椎構造を有する多自由度全身行動ロボットシステム.
+\newblock PhD thesis, 東京大学, 2001.
+
+\bibitem{Hondo:JRSJ2011}
+本堂貴敏, 水内郁夫.
+\newblock ばねの研究.
+\newblock 日本ばね学会誌, Vol.~72, No.~3, pp. 350--355, 2011.
+
+\bibitem{Mizuuchi:RSJ2015-baneoid}
+水内郁夫, 本堂貴敏, 伊藤達也, Tom\'{a}\v{s} Koz\'ak, 朝岡忠, 恒岡佑哉,
+  尾形将平, 山本奈都美.
+\newblock 全身に直列弾性要素を組み込んだヒューマノイド {Baneoid}.
+\newblock  第33回日本ロボット学会学術講演会講演論文集, 2015.
+
+\end{thebibliography}

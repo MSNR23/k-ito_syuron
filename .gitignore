@@ -1,0 +1,12 @@
+*.dvi
+*.aux
+*.log
+*.blg
+*.bbl
+*.toc
+*.out
+*.pdf
+out2uni
+*.bb
+*~
+*#

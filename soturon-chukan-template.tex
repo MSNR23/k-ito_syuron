@@ -1,0 +1,129 @@
+\input{tuat-common.tex}
+
+\pagenum{\bf1-9}%ページ番号 プログラムが確定したら修正を！
+\secret{b}{0mm}                 %学外秘/専攻外秘の設定．学部はb（学外秘），修士はm（専攻外秘）にする．
+                                %第2引数は位置の調整用．-側に大きくすれば左に寄る．+側に大きくすれば右に寄る．
+
+\newcommand{\FIGDIR}{./fig}	%図を置くディレクトリを指定する
+				%Makefileとは連動していないので注意
+\usepackage{pxjahyper} %% これを入れるとしおりが文字化けしない．out2uniが不要になる．
+\usepackage{ikuo}%%便利コマンド集．
+
+\begin{document}
+\twocolumn[%
+\title{ほげ症候群の予防を目的としたほげワクチンの開発}{Development of Hoge Vaccine for Prevention of Hoge Syndrome}
+\author{本堂　貴敏}{水内研究室}{Takatoshi HONDO}
+]
+\begin{small}
+\section{緒　　言}
+ほげ症候群が近年大きな社会問題となっている\cite{Kawamura:hogege2010}．
+ほげ症候群の蔓延により，ソフトウェア生産性の低下や
+プログラミング初心者の混乱などの悪影響が多数報告されている．
+ほげ症候群が重大な精神疾患であり，かつ社会に多大なる
+悪影響を与えているにも関わらず，これまでほげ症候群に関する
+対策は全く行われてこなかった．本研究では，ほげ症候群を予防するための
+ワクチンの開発を目的とする．本研究では特にほげの原理に基づいた
+ワクチン開発を試みる．
+\section{ほげ症候群の主な症例}
+ほげ症候群とは主に以下のような症状全般を指す\cite{hooogeBook}．
+\begin{itemize}
+\item 気がつくと指が勝手に``hoge''と打っている．
+\item ``hogan''と打とうとすると指が勝手に``hogen''と動く．
+\item 気がつくと「ほげー」っとしている．
+\item 気がつくとほげだけで会話が成立している．
+\end{itemize}
+
+\section{ほげの公式の導出}
+\subsection{ほげの原理}
+\subseclabel{HogePrinciple}
+
+ほげの原理は次式で与えられる\cite{Hondo:JRSJ2011}．
+\begin{eqnarray}
+\int_{-\infty}^\infty \mathrm{hoge}(x,y) dx = \left( \pdiff{\mathrm{hoge}}{y} \right)_{x = 0}
+\equlabel{hoge}
+\end{eqnarray}
+ただし$\mathrm{hoge}(x,y)$はほげ母関数である．
+
+\subsection{ほげの公式}
+\equref{hoge}から以下の式が自明である．
+\begin{eqnarray}
+1 + 1 = 2
+\end{eqnarray}
+本研究では上式をほげの公式と呼ぶ．
+
+\section{ほげワクチンの実験}
+\seclabel{HogeVaccine}
+
+前章での議論より以下の反応でほげ症候群が予防できると考えられる．
+\begin{eqnarray}
+\mathrm{Hoge^{2+} \ + 2e^{-} \ \rightarrow \ Hoge}
+\end{eqnarray}
+ワクチン生成装置のスペックを\tabref{spec}に示す．
+
+\begin{table}[b]
+\caption{Motor parameters}
+\tablabel{spec}
+\begin{center}
+\begin{tabular}{c c}
+\toprule
+$R$ & $11.2\,\mathrm{\Omega}$ \\
+$L$ & $4.52 \times 10^{-4}\,\mathrm{H}$ \\
+$J_\mathrm{m}$ & $1.29 \times 10^{-7}\,\mathrm{kg \cdot m^2}$ \\
+$K_\mathrm{m\phi}\,(=K_\mathrm{b})$ & $1.62 \times 10^{-2}\,\mathrm{N \cdot m / A}$ \\
+$F_\mathrm{m}$ & $2.28 \times 10^{-7}\,\mathrm{N \cdot m \cdot s / rad}$ \\
+$E$ & $24\,\mathrm{V}$ \\
+$\gamma$ & 84 \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{table}
+
+\fig{fig1.eps}{width=.9\hsize}{The concept of hoge}
+
+何かの図を\figref{fig1.eps}に示す．
+しかし，ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
+げほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
+ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
+げほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
+である．
+
+\begin{figure}[tbp]
+\begin{center}
+\framebox{ほげは世界を救う}
+\caption{Result of experiment}
+\figlabel{piyo}
+\end{center}
+\end{figure}
+
+実験結果を\figref{piyo}に示す．
+これは，\subsecref{HogePrinciple}に従っていると言え，
+本章の結論を示している．
+しかし，
+ほげワクチンほげワクチンほげワクチンほげワクチンほげワクチン
+ほげワクチンほげワクチンほげワクチンほげワクチンほげワクチン
+ほげワクチンほげワクチンほげワクチンほげワクチンほげワクチン
+である．
+
+
+\section{結　　言}
+ほげワクチンの開発は不可能であることが，\secref{HogeVaccine}の実験によ
+り示された．
+%
+そのため，ほげ症候群にならないように予防をする必要があると考えられる．
+
+{
+\small
+ \setlength{\kanjiskip}{0.0zw plus.01zw} %
+ \setlength{\baselineskip}{9pt}        %
+ \setlength{\itemsep}{0.2pt}             %
+ \setlength{\lineskip}{0pt}              %
+%% \scriptsize %%←どうしても入らない時は，このコメントをはずすと少し小さくなる．
+\bibliographystyle{junsrt}
+\bibliography{reference}
+}
+
+
+
+%% \end{thebibliography}
+\end{small}
+\end{document}

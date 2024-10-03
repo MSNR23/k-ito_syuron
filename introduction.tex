@@ -1,0 +1,47 @@
+\chapter[長いタイトルを改行する場合はこのようにしましょう(見出し用)]%
+        {長いタイトルを改行する場合は\\このようにしましょう}
+
+        \figb{photo.jpg}{width=0.75\hsize}{ある日の研究室}%
+
+        \fig{fig1.eps}{width=.9\hsize}{何かの図}%
+
+        \section{研究の背景と目的}
+        \seclabel{intro}
+
+        研究室が散らかっている(\figref{photo.jpg}参照)ので、片付けるロボットが欲
+        しい。
+
+        この図(\figref{fig1.eps})はなんだろう？
+
+        \secref{intro}ではほげほげ。
+
+        こういう研究\cite{Ikuo:doctor}もありました。
+
+        ああいう研究\cite{Hondo:JRSJ2011}もありました。
+
+        bibファイルでは、著者名(author=)は、
+        「苗字 名前 and 苗字 名前 and 苗字 名前」
+        のようにするんですよ\cite{Mizuuchi:RSJ2015-baneoid}。
+        間は全部半角スペースですよ。
+
+        \section{従来研究}
+
+        \begin{table}[tb]
+          \tablabel{hogehoge}
+          \begin{center}
+            \caption{試しに作った表}
+            \begin{tabular}{l|c|r|r}
+              \hline
+              項目 & 数値 & コメント & 備考 \\
+              \hline
+              a & 10.0 & こめんとしがたい & どうすべ？\\
+              b & 20.0 & こめんとしがたい & どうすべ？\\
+              c & -100.0 & こめんとしがたい & どうすべ？\\
+              \hline
+            \end{tabular}
+          \end{center}
+        \end{table}
+
+        \tabref{hogehoge}に、何かの表を示す。
+
+        \section{本論文の構成}
