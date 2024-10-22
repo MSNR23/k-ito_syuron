@@ -27,11 +27,12 @@
   {\huge \bf \@title \par}\vfill%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%yasutaka
 %%   \vskip 9cm
-  \vskip 2cm
- \begin{picture}(200,100)\put(0,0){\line(1,0){200}}\put(0,80){\line(1,0){200}}%
- \put(0,100){\line(1,0){200}}\put(0,0){\line(0,1){100}}\put(100,0){\line(0,1){100}}%
- \put(200,0){\line(0,1){100}}\put(20,85){指導教員印}\put(130,85){提出印}%
- \end{picture}\vfill%
+\vskip 2cm
+\begin{picture}(100,100)\put(0,0){\line(1,0){100}}\put(0,80){\line(1,0){100}}%
+\put(0,100){\line(1,0){100}}\put(0,0){\line(0,1){100}}\put(100,0){\line(0,1){100}}%
+%  \put(200,0){\line(0,1){100}}%
+\put(20,85){指導教員印}
+\end{picture}\vfill%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%yasutaka
 %  \vskip 5cm
 %  {\LARGE \bf 1p 〜 \pageref{bktitle}p 完}\\
