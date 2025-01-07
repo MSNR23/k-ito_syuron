@@ -3,9 +3,152 @@
 \section{はじめに}
 本章では、強化学習を用いて投擲物の重さに応じた最適投擲フォームの比較と腕の長さに応じた最適投擲フォームの比較を行う。
 \section{動力学モデル}
+本章の検証で用いた動力学モデルを　に示す。人間の腕に見立てた剛体２リンクを動力学モデルとして扱った。
+ラグランジュの方法を用いて導いた剛体２リンクの運動方程式は、次の通りである。
+各リンクの重心位置$o_{s_{1}}$,$o_{s_{1}}$は、\\
+% \begin{bmatrix}
+%   \equlabel{o_s1}
+%   l_{q1}cos\theta_{1}\\
+%   l_{q1}sin\theta_{1}\\
+% \end{bmatrix}
+\section{強化学習の設定}
+\subsection{状態}
+状態変数は4つとし、上腕リンクの角度$\theta_{1}$、角速度$\dot{\theta}_{1}$,前腕リンクの角度$\theta_{2}$、角速度$\dot{\theta}_{2}$の4つである。
+各リンクの角度の可動範囲は、-180 deg $\le$ $\theta_{1}$ $\le$ 180 deg、0 $\le$ $\theta_{2}$ $\le$ 150 degとした。
+上腕リンク、すなわち肩は本来3自由度でありピッチ軸周りの可動範囲は設定した可動範囲より小さい。しかし、ロール軸、ヨー軸の可動範囲の影響により肩が360度回転しているように見える。
+本章では2次元でのシミュレーションのため上記の可動範囲とした。
+また、各リンクの角速度については、-10.0 m/s $\le$ $\dot{\theta}_{1}$ $\le$ 10.0 m/s、-10.0 m/s $\le$ $\dot{\theta}_{2}$ $\le$ 10.0 m/sとした。
+分割数は各状態4分割であり、全ての状態を$4^{4}$=256通りで表すことができる。
+\subsection{行動}
+行動は、全9通りに設定した。肩関節にかかるトルクを正、0、負の3通り、同様に肘関節にかかるトルクも正、0、負の3通りとした。
+これにより、Qテーブルは256$\times$9=2304通りで表すことができる。
+\subsection{報酬}
+報酬は、リリース時の投射角$\theta_{v}$と手先速度$v_{2}$の2つの要素から設定した。リリースの投射角$\theta_{v}$について、\equref{投射角}で計算した。
+\begin{eqnarray}
+  \equlabel{投射角}
+  \theta_{v}=\theta_{1}+\theta_{2}-90
+\end{eqnarray}
+\equref{投射角}において、$\theta_{v}$、$\theta_{1}$、$\theta_{2}$の単位はdegである。
+また、条件は以下の通りとした。\\
+0 $\le$ $\theta_{v}$ $\le$ 45 degのとき、$\frac{\theta_{v}}{45}$\\
+45 deg $\le$ $\theta_{v}$ $\le$ 90 degのとき、$\frac{90-\theta_{v}}{45}$\\
+90 deg $\le$ $\theta_{v}$ $\le$ 135 degのとき、$\frac{\theta_{v}-90}{45}$\\
+135 deg $\le$ $\theta_{v}$ $\le$ 180 degのとき、$\frac{180-\theta_{v}}{45}$\\
+$\theta_{v}$ $\le$ 0、180 $\le$ $\theta_{v}$のとき、0\\
+この条件により、投射角が45 degまたは135 degのときに報酬最大となる。これは、投擲物の遠投時に最も投射角として有効な角度である。
+これらの角度からリリース時の角度が離れるにつれて報酬が小さくなっていく。
+よって投擲方向は指定せずにより投擲物の飛距離を大きくするためのリリースポイントの報酬を大きくすることができる。\\
+手先速度$v_{2}$について、\equref{手先速度x}~\equref{手先速度}で計算した。\\
+\begin{eqnarray}
+  \equlabel{手先速度x}
+  v_{x2}^{2}=-l_{1}\sin\theta_{1}\cdot\dot{\theta}_{1}-l_2\sin(\theta_{1}+\theta_{2})\cdot(\dot{\theta}_{1}+\dot{\theta}_{2})
+\end{eqnarray}
+\begin{eqnarray}
+  \equlabel{手先速度y}
+  v_{y2}^{2}=-l_{1}\cos\theta_{1}\cdot\dot{\theta}_{1}+l_2\cos(\theta_{1}+\theta_{2})\cdot(\dot{\theta}_{1}+\dot{\theta}_{2})
+\end{eqnarray}
+\begin{eqnarray}
+  \equlabel{手先速度}
+  v_{2}=\sqrt{v_{x2}^{2}+v_{y2}^{2}}
+\end{eqnarray}
+以上の2つの要素より、報酬は$\theta_{v}$$\times$$v_{2}$と設定した。この設定により、遠投を行うための投擲フォームを獲得することができる。
+また、リリース時の投射角と手先速度の積とすることで、どちらの要素にも報酬に対する重みを付与することができる。\\
+さらに効率的に投擲フォームを獲得するために、罰則として累積消費エネルギーを採用し、\equref{合計消費}で計算した。\\
+\begin{eqnarray}
+  \equlabel{上腕消費}
+  CE_{1}&=&\int \tau_{1}(t)\cdot\dot{\theta}_{1} dt\\
+        &\approx&\abs{\tau_{1}(t)\cdot\dot{\theta}_{1}}\cdot\Delta t
+\end{eqnarray}
+\begin{eqnarray}
+  \equlabel{前腕消費}
+  CE_{2}&=&\int \tau_{2}(t)\cdot\dot{\theta}_{2} dt\\
+        &\approx&\abs{\tau_{2}(t)\cdot\dot{\theta}_{2}}\cdot\Delta t
+\end{eqnarray}
+\begin{eqnarray}
+  \equlabel{合計消費}
+  CE=CE_{1}+CE_{2}
+\end{eqnarray}
+これは、1エピソード内において、ステップごとに消費するエネルギーを計算し、それを加算したものである。
+累積消費エネルギーはステップを重ねるごとに大きくなるため、1エピソードの内、最終ステップが最も大きくなる。
+シミュレーションじょうでは上腕リンクを回し続けるほど手先速度は大きくなると考えられるが、実際の投擲動作では人間の疲労を考慮する必要がある。
+そのため、累積消費エネルギーを罰則として採用することは、疲労を再現することを期待できる。
+\subsection{その他}
+本章では、\equref{Q}における学習率$\alpha$を0.1、割引率$\gamma$を0.9に設定した。これは将来の報酬を優先的に考慮した学習を期待するためである。
+1タイムステップは0.005 sであり、1エピソード内のステップ数は2000、すなわち、10 sとした。エピソード数に関しては、学習が収束するまで制限なく行うものとした。
 \section{投擲物の重さに応じた最適投擲フォームの比較}
-\subsection{強化学習の設定}
 \subsection{シミュレーション設定}
+本検証で用いたパラメータを表\ref{2_link_ball}に示す。身体のサイズは、身長1.72 m、体重70 kgの人間の各部位のサイズとした。
+投擲物は、0.14 kg（野球の硬式球）と7.24 kg（砲丸）とした。
+\begin{table}[tb]
+  \label{2_link_ball}
+  \begin{center}
+    \caption{Parameters which are used for 2-link simulation}
+    \begin{tabular}{l|c|c|r}
+      \hline
+      Parameters & Unit & Values \\
+      \hline
+      l_{1} & m & 0.32 \\
+      l_{2} & m & 0.44 \\
+      l_{f} & m & 0.25 \\
+      l_{h} & m & 0.19 \\
+      m_{f} & kg & 1.12 \\
+      m_{h} & kg & 0.42 \\
+      m_{o} & kg & 0.14 or 7.24 \\
+      m_{1} & kg & 1.96 \\
+      m_{2} & kg & 1.68 or 8.78 \\
+      b_{1} &  & 0.05 \\
+      b_{2} &  & 0.01 \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+重力加速度gを9.8 $m/s^{2}$とする。また、本章では、前腕と手と投擲物の要素を合わせて前腕リンクとしてみなすため、3つの要素を考慮して設定を行った。
+前腕の要素として、$l_{f}$を前腕長さ、$m_{f}$を前腕重さ、$l_{h}$を手長さ、$m_{h}$を手重さとした。\\
+上腕リンクの重心までの長さ$l_{g1}$、前腕リンクの重心までの長さ$l_{g2}$を、\equref{上腕重心}、\equref{前腕重心}により計算した。
+\begin{eqnarray}
+  \equlabel{上腕重心}
+  l_{g1}=\frac{1}{2}l_{1}
+\end{eqnarray}
+\begin{eqnarray}
+  \equlabel{前腕重心}
+  l_{g2}=\frac{1}{2}m_{f}l_{f}+m_{h}(l_{f}+\frac{1}{2}l_{h}+m_{o}l_{2})/m_{2}
+\end{eqnarray}
+上腕リンクの慣性モーメント$I_{1}$と前腕リンクの慣性モーメント$I_{2}$を\equref{上腕慣性}、\equref{前腕慣性}により計算した。
+\begin{eqnarray}
+  \equlabel{上腕慣性}
+  I_{1}=\frac{1}{12}m_{1}l_{1}^{2}
+\end{eqnarray}
+\begin{eqnarray}
+  \equlabel{前腕慣性}
+  I_{2}=\frac{1}{12}m_{f}l_{f}^{2}+m_{f}l_{g1}^{2}+\frac{1}{12}m_{h}l_{h}^{2}+m_{h}l_{g2}^{2}+m_{o}l_{2}^{2}
+\end{eqnarray}
+\equref{上腕慣性}、\equref{前腕慣性}による野球の硬式球のときと砲丸のときの計算結果を表\ref{2_link_cal}に示す。
+\begin{table}[tb]
+  \label{2_link_cal}
+  \begin{center}
+    \caption{Calculation Results of $l_{g1}$,$l_{g2}$,$I_{1}$,$I_{2}$}
+    \begin{tabular}{l|c|c|r}
+      \hline
+      Parameters & Values of baseball & Values of cannonball \\
+      \hline
+      l_{g1} & 0.16 & 0.16 \\
+      l_{g2} & 0.21 & 0.40 \\
+      I_{1} & 0.017 & 0.081 \\
+      I_{2} & 0.017 & 1.50 \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+$\theta_{1}$、$\theta_{2}$、$\dot{\theta}_{1}$、$\dot{\theta}_{2}$の初期状態はいずれも0とした。\\
+各関節にかかるトルクについて、\equref{肩トルク}、\equref{肘トルク}で計算した。
+\begin{eqnarray}
+  \equlabel{前腕慣性}
+  I_{2}=\frac{1}{12}m_{f}l_{f}^{2}+m_{f}l_{g1}^{2}+\frac{1}{12}m_{h}l_{h}^{2}+m_{h}l_{g2}^{2}+m_{o}l_{2}^{2}
+\end{eqnarray}
+\begin{eqnarray}
+  \equlabel{前腕慣性}
+  I_{2}=\frac{1}{12}m_{f}l_{f}^{2}+m_{f}l_{g1}^{2}+\frac{1}{12}m_{h}l_{h}^{2}+m_{h}l_{g2}^{2}+m_{o}l_{2}^{2}
+\end{eqnarray}
 \subsection{比較結果}
 \section{腕の長さに応じた最適投擲フォームの比較}
 \subsection{強化学習の設定}
