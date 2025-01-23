@@ -1,16 +1,123 @@
 \chapter[剛体２リンクによる最適投擲シミュレーション]{剛体２リンクを用いた最適投擲フォーム}
 
 \section{はじめに}
-本章では、強化学習を用いて投擲物の重さに応じた最適投擲フォームの比較と腕の長さに応じた最適投擲フォームの比較を行う。
+本章では、強化学習を用いて導出した投擲物の重さに応じた投擲フォームの比較と腕の長さに応じた投擲フォームの比較を行う。
 \section{動力学モデル}
-本章の検証で用いた動力学モデルを　に示す。人間の腕に見立てた剛体２リンクを動力学モデルとして扱った。
+本章の検証で用いた動力学モデルを\figref{4.1.eps}
+に示す。人間の腕に見立てた剛体２リンクを動力学モデルとして扱った。
+\fig{4.1.eps}{width=.50\hsize}{剛体2リンク}
 ラグランジュの方法を用いて導いた剛体２リンクの運動方程式は、次の通りである。
-各リンクの重心位置$o_{s_{1}}$,$o_{s_{1}}$は、\\
-% \begin{bmatrix}
-%   \equlabel{o_s1}
-%   l_{q1}cos\theta_{1}\\
-%   l_{q1}sin\theta_{1}\\
-% \end{bmatrix}
+各リンクの重心位置$o_{s_{1}}$,$o_{s_{1}}$は、
+
+\begin{eqnarray}
+  o_{s_{1}} = 
+              \begin{bmatrix}
+              l_{g1}cos\theta_{1}\\
+              l_{g1}sin\theta_{1}
+              \end{bmatrix}
+\end{eqnarray}
+\begin{eqnarray}
+  o_{s_{2}} = 
+              \begin{bmatrix}
+              l_{1}cos\theta_{1} + l_{g2}cos(\theta_{1} + \theta_{2})\\
+              l_{1}sin\theta_{1} + l_{g2}sin(\theta_{1} + \theta_{2})
+              \end{bmatrix}
+\end{eqnarray}
+
+微分すると、
+
+\begin{eqnarray}
+  o_{\dot{s}_{1}} = 
+              \begin{bmatrix}
+              -l_{g1}sin\theta_{1}\dot{\theta}_{1}\\
+              l_{g1}cos\theta_{1}\dot{\theta}_{1}
+              \end{bmatrix}
+\end{eqnarray}
+\begin{eqnarray}
+  o_{\dot{s}_{2}} = 
+              \begin{bmatrix}
+                -l_{1}sin\theta_{1}\dot{\theta}_{1} - l_{g2}sin(\theta_{1} + \theta_{2})(\dot{\theta}_{1} + \dot{\theta}_{2})\\
+                l_{1}cos\theta_{1}\dot{\theta}_{1} + l_{g2}cos(\theta_{1} + \theta_{2})(\dot{\theta}_{1} + \dot{\theta}_{2})
+              \end{bmatrix}
+\end{eqnarray}
+
+剛体2リンク全体の並進運動エネルギー$E_{t}$は、各リンクの並進運動エネルギーの合計とすると、
+
+\begin{eqnarray}
+  E_{t}
+  &=&\frac{1}{2}m_{1}o_{\dot{s}_{1}}{}^T\!o_{\dot{s}_{1}} + \frac{1}{2}m_{2}o_{\dot{s}_{2}}{}^T\!o_{\dot{s}_{2}} \nonumber \\
+  &=&\frac{1}{2}m_{1}{l_{g1}}^2{\dot{\theta}_{1}}^2 + \frac{1}{2}m_{2}{{{l_{1}}^2}{\dot{\theta}_{1}}^2 + {l_{g2}}^2(\dot{\theta}_{1} + \dot{\theta}_{2})^2 + 2{l_{1}}{l_{g2}}cos({\dot{\theta}_{1}}^2 + \dot{\theta}_{1}\dot{\theta}_{2})}
+\end{eqnarray}
+
+同様に、回転運動エネルギー$E_{k}$は、
+
+\begin{eqnarray}
+  E_{r}
+  =\frac{1}{2}I_{1}{\dot{\theta}_{1}}^2 + \frac{1}{2}I_{2}(\dot{\theta}_{1} + \dot{\theta}_{2})^2
+\end{eqnarray}
+
+よって、全体の運動エネルギー$K_{r}$は、
+
+\begin{eqnarray}
+  E_{r}
+  =E_{t} + E_{r}
+\end{eqnarray}
+
+重力によって生じる位置エネルギーについて、重力方向をg = ${[0 \quad -g]}^T$とすると、上腕リンクの位置エネルギー$E_{p1}$は、
+
+\begin{eqnarray}
+  E_{p1}
+  =m_{1}gl_{g1}sin\theta_{1}
+\end{eqnarray}
+
+前腕リンクの位置エネルギー$E_{p2}$は、
+
+\begin{eqnarray}
+  E_{p1}
+  =m_{2}g(l_{1}sin\theta_{1} + l_{g2}sin(\theta_{1} + \theta_{2}))
+\end{eqnarray}
+
+よって、全体の位置エネルギー$K_{p}$は、
+
+\begin{eqnarray}
+  E_{p}
+  =E_{p1} + E_{p2}
+\end{eqnarray}
+
+ここで、ラグランジュ関数Lを
+
+\begin{eqnarray}
+  L
+  =E_{k} - E_{p}
+\end{eqnarray}
+
+とすると、運動方程式は、
+
+\begin{eqnarray}
+  \frac{d}{dt}(\frac{\partial L}{\partial \dot{q_{i}}}) - \frac{\partial L}{\partial q_{i}} = f_{i} \quad (i = 1,\cdot\cdot\cdot, n)
+\end{eqnarray}
+
+ラグランジュ関数Lを求め、式に代入すると、$\theta_{1}$についての運動方程式
+
+\begin{eqnarray}
+  L
+  =E_{k} - E_{p}
+\end{eqnarray}
+
+$\theta_{2}$についての運動方程式
+
+\begin{eqnarray}
+  L
+  =E_{k} - E_{p}
+\end{eqnarray}
+
+を得る。これらを整理すると以下の式となる。
+
+\begin{eqnarray}
+  M(\theta)\ddot{\theta} + h(\theta, \dot{\theta}) + g(\dot{\theta}) + b(\dot{\theta}) = \tau
+\end{eqnarray}
+
+
 \section{強化学習の設定}
 \subsection{状態}
 状態変数は4つとし、上腕リンクの角度$\theta_{1}$、角速度$\dot{\theta}_{1}$,前腕リンクの角度$\theta_{2}$、角速度$\dot{\theta}_{2}$の4つである。
@@ -23,19 +130,19 @@
 行動は、全9通りに設定した。肩関節にかかるトルクを正、0、負の3通り、同様に肘関節にかかるトルクも正、0、負の3通りとした。
 これにより、Qテーブルは256$\times$9=2304通りで表すことができる。
 \subsection{報酬}
-報酬は、リリース時の投射角$\theta_{v}$と手先速度$v_{2}$の2つの要素から設定した。リリースの投射角$\theta_{v}$について、\equref{投射角}で計算した。
-\begin{eqnarray}
-  \equlabel{投射角}
+報酬は、リリース時のa$\theta_{v}$と手先速度$v_{2}$の2つの要素から設定した。リリースのa$\theta_{v}$について、\equref{abc}で計算した。
+\begin{equation}
+  \equlabel{abc}
   \theta_{v}=\theta_{1}+\theta_{2}-90
-\end{eqnarray}
-\equref{投射角}において、$\theta_{v}$、$\theta_{1}$、$\theta_{2}$の単位はdegである。
+\end{equation}
+\equref{abc}において、$\theta_{v}$、$\theta_{1}$、$\theta_{2}$の単位はdegである。
 また、条件は以下の通りとした。\\
 0 $\le$ $\theta_{v}$ $\le$ 45 degのとき、$\frac{\theta_{v}}{45}$\\
 45 deg $\le$ $\theta_{v}$ $\le$ 90 degのとき、$\frac{90-\theta_{v}}{45}$\\
 90 deg $\le$ $\theta_{v}$ $\le$ 135 degのとき、$\frac{\theta_{v}-90}{45}$\\
 135 deg $\le$ $\theta_{v}$ $\le$ 180 degのとき、$\frac{180-\theta_{v}}{45}$\\
 $\theta_{v}$ $\le$ 0、180 $\le$ $\theta_{v}$のとき、0\\
-この条件により、投射角が45 degまたは135 degのときに報酬最大となる。これは、投擲物の遠投時に最も投射角として有効な角度である。
+この条件により、aが45 degまたは135 degのときに報酬最大となる。これは、投擲物の遠投時に最もaとして有効な角度である。
 これらの角度からリリース時の角度が離れるにつれて報酬が小さくなっていく。
 よって投擲方向は指定せずにより投擲物の飛距離を大きくするためのリリースポイントの報酬を大きくすることができる。\\
 手先速度$v_{2}$について、\equref{手先速度x}~\equref{手先速度}で計算した。\\
@@ -52,7 +159,7 @@ $\theta_{v}$ $\le$ 0、180 $\le$ $\theta_{v}$のとき、0\\
   v_{2}=\sqrt{v_{x2}^{2}+v_{y2}^{2}}
 \end{eqnarray}
 以上の2つの要素より、報酬は$\theta_{v}$$\times$$v_{2}$と設定した。この設定により、遠投を行うための投擲フォームを獲得することができる。
-また、リリース時の投射角と手先速度の積とすることで、どちらの要素にも報酬に対する重みを付与することができる。\\
+また、リリース時のaと手先速度の積とすることで、どちらの要素にも報酬に対する重みを付与することができる。\\
 さらに効率的に投擲フォームを獲得するために、罰則として累積消費エネルギーを採用し、\equref{合計消費}で計算した。\\
 \begin{eqnarray}
   \equlabel{上腕消費}
@@ -80,24 +187,24 @@ $\theta_{v}$ $\le$ 0、180 $\le$ $\theta_{v}$のとき、0\\
 本検証で用いたパラメータを表\ref{2_link_ball}に示す。身体のサイズは、身長1.72 m、体重70 kgの人間の各部位のサイズとした。
 投擲物は、0.14 kg（野球の硬式球）と7.24 kg（砲丸）とした。
 \begin{table}[tb]
-  \label{2_link_ball}
+  \tablabel{2 link ball}
   \begin{center}
     \caption{Parameters which are used for 2-link simulation}
-    \begin{tabular}{l|c|c|r}
+    \begin{tabular}{l|c|r}
       \hline
       Parameters & Unit & Values \\
       \hline
-      l_{1} & m & 0.32 \\
-      l_{2} & m & 0.44 \\
-      l_{f} & m & 0.25 \\
-      l_{h} & m & 0.19 \\
-      m_{f} & kg & 1.12 \\
-      m_{h} & kg & 0.42 \\
-      m_{o} & kg & 0.14 or 7.24 \\
-      m_{1} & kg & 1.96 \\
-      m_{2} & kg & 1.68 or 8.78 \\
-      b_{1} &  & 0.05 \\
-      b_{2} &  & 0.01 \\
+      $l_{1}$ & m & 0.32 \\
+      % l_{2} & m & 0.44 \\
+      % l_{f} & m & 0.25 \\
+      % l_{h} & m & 0.19 \\
+      % m_{f} & kg & 1.12 \\
+      % m_{h} & kg & 0.42 \\
+      % m_{o} & kg & 0.14 or 7.24 \\
+      % m_{1} & kg & 1.96 \\
+      % m_{2} & kg & 1.68 or 8.78 \\
+      % b_{1} &  & 0.05 \\
+      % b_{2} &  & 0.01 \\
       \hline
     \end{tabular}
   \end{center}
