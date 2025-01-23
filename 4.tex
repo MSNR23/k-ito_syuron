@@ -16,6 +16,7 @@
               l_{g1}sin\theta_{1}
               \end{bmatrix}
 \end{eqnarray}
+
 \begin{eqnarray}
   o_{s_{2}} = 
               \begin{bmatrix}
@@ -100,13 +101,18 @@
 ラグランジュ関数Lを求め、式に代入すると、$\theta_{1}$についての運動方程式
 
 \begin{eqnarray}
-  (m_{1}{l_{g1}}^2 + I_{1} + m_{2}({l_{1}}^2 + {l_{g2}}^2) &+& 2l_{1}l_{g2}cos\theta_{2})\ddot{\theta_{1}} + (m_{2}({l_{g2}}^2 + l_{1}l_{g2}cos\theta_{2}) + I_{2})\ddot{\theta_{2}} - m_{2}l_{1}l_{g2}sin\theta_{2}(2\dot{\theta_{1}}\dot{\theta_{2}} + {\dot{theta_{2}}}^2) &+& m_{1}gl_{g1}cos\theta_{1} + m_{2}g(l_{1}cos\theta_{1} + l_{g2}cos(\theta_{1} + \theta_{2})) = \tau_{1}
+  &&(m_{1}{l_{g1}}^2 + I_{1} + m_{2}({l_{1}}^2 + {l_{g2}}^2)
+  + 2l_{1}l_{g2}cos\theta_{2})\ddot{\theta_{1}} \nonumber \\
+  &+& (m_{2}({l_{g2}}^2 + l_{1}l_{g2}cos\theta_{2}) + I_{2})\ddot{\theta_{2}} \nonumber \\
+  &-& m_{2}l_{1}l_{g2}sin\theta_{2}(2\dot{\theta_{1}}\dot{\theta_{2}} + {\dot{\theta_{2}}}^2)  \nonumber \\
+  &+& m_{1}gl_{g1}cos\theta_{1} + m_{2}g(l_{1}cos\theta_{1} + l_{g2}cos(\theta_{1} + \theta_{2})) = \tau_{1}
 \end{eqnarray}
 
 $\theta_{2}$についての運動方程式
 
 \begin{eqnarray}
-  (m_{2}({l_{g2}}^2 + l_{1}l_{g2}cos\theta_{2}) + I_{2})\ddot{\theta_{1}} + (m_{2}{l_{g2}}^2 + I_{2})\ddot{\theta_{2}} + m_{2}l_{1}l_{g2}sin\theta_{2}{\dot{\theta_{1}}}^2 + m_{2}gl_{g2}cos(\theta_{1} + \theta_{2}) = \tau_{2}
+  &&(m_{2}({l_{g2}}^2 + l_{1}l_{g2}cos\theta_{2}) + I_{2})\ddot{\theta_{1}} + (m_{2}{l_{g2}}^2 + I_{2})\ddot{\theta_{2}} \nonumber \\
+  &+& m_{2}l_{1}l_{g2}sin\theta_{2}{\dot{\theta_{1}}}^2 + m_{2}gl_{g2}cos(\theta_{1} + \theta_{2}) = \tau_{2}
 \end{eqnarray}
 
 を得る。これらを整理すると以下の式となる。
@@ -117,13 +123,13 @@ $\theta_{2}$についての運動方程式
 
 このとき、$\theta$=${[\theta_{1} \quad \theta_{2}]}^T$、$\tau$=${[\tau_{1} \quad \tau_{2}]}^T$であり、
 
-\begin{eqnarray}
-  M(\theta)=
+\begin{align}
+  M(\theta)= 
             \begin{bmatrix}
               m_{1}{l_{g1}}^2 + I_{1} + m_{2}({l_{1}}^2 + {l_{g2}}^2 + 2l_{2}l{g2}cos\theta{2}) + I_{2} & m_{2}({l_{g2}}^2 + l_{1}l{g2}cos\theta_{2}) + I_{2} \\
               m_{2}({l_{g2}}^2 + l_{1}l{g2}cos\theta_{2}) + I_{2} & m_{2}{l_{g2}}^2 + I_{2}
             \end{bmatrix}
-\end{eqnarray}
+\end{align}
 
 \begin{eqnarray}
   h(\theta, \dot{\theta})=
