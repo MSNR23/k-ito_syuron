@@ -3,7 +3,76 @@
 \section{はじめに}
 本研究では自作したシミュレータを用いて投擲フォームを導出し、戦略を考察したが、検討に先立ち剛体1リンクモデルでのリンク速度最適化学習を行い、シミュレータと手法の妥当性について検証した。
 \section{動力学モデル}
-本章の検証で用いた動力学モデルである剛体１リンクを　に示す。
+本章の検証で用いた動力学モデルである剛体１リンクを\figref{3.1.jpg}に示す。
+\fig{3.1.jpg}{width=.50\hsize}{剛体1リンク}
+ラグランジュの方法を用いて導いた剛体1リンクの運動方程式は、次の通りである。\\
+各リンクの重心位置$o_{s_{1}}$,$o_{s_{1}}$は、
+
+\begin{eqnarray}
+  o_{s} = 
+              \begin{bmatrix}
+              l_{g}cos\theta\\
+              l_{g}sin\theta
+              \end{bmatrix}
+\end{eqnarray}
+
+微分すると、
+
+\begin{eqnarray}
+  o_{\dot{s}} = 
+              \begin{bmatrix}
+              -l_{g}sin\theta\dot{\theta}\\
+              l_{g}cos\theta\dot{\theta}
+              \end{bmatrix}
+\end{eqnarray}
+
+剛体1リンクの並進運動エネルギー$E_{t}$は、
+
+\begin{eqnarray}
+  E_{t} =
+  &=&\frac{1}{2}mo_{\dot{s}}{}^T\!o_{\dot{s}} \nonumber \\
+  &=&\frac{1}{2}m{l_{g}}^2{\dot{\theta}}^2
+\end{eqnarray}
+
+同様に、回転運動エネルギー$E_{k}$は、
+
+\begin{eqnarray}
+  E_{r} =
+  =\frac{1}{2}I{\dot{\theta}}^2
+\end{eqnarray}
+
+よって、運動エネルギー$T$は、
+
+\begin{eqnarray}
+  T
+  &=&E_{t} + E_{r} \nonumber \\
+  &=&\frac{1}{2}{\dot{\theta}}^2(m{l_{g}}^2 + I)
+\end{eqnarray}
+
+位置エネルギー$T$は、
+
+\begin{eqnarray}
+  U
+  = mgl_{g}sin\theta
+\end{eqnarray}
+
+ここで、ラグランジュ関数Lを
+
+\begin{eqnarray}
+  L
+  =T - U
+\end{eqnarray}
+
+とすると、運動方程式は、
+
+\begin{eqnarray}
+  \equlabel{3.21}
+  \frac{d}{dt}(\frac{\partial L}{\partial \dot{q_{i}}}) - \frac{\partial L}{\partial q_{i}} = f_{i} \quad (i = 1,\cdot\cdot\cdot, n)
+\end{eqnarray}
+
+ラグランジュ関数Lを求め、\equref{3.21}に代入すると、
+
+\section{シミュレータの作成}
 \section{強化学習の設定}
 本章の強化学習を行うにあたって、状態、行動、報酬、その他を設定した。
 \subsection{状態}
