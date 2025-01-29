@@ -66,13 +66,47 @@
 とすると、運動方程式は、
 
 \begin{eqnarray}
-  \equlabel{3.21}
+  \equlabel{3.8}
   \frac{d}{dt}(\frac{\partial L}{\partial \dot{q_{i}}}) - \frac{\partial L}{\partial q_{i}} = f_{i} \quad (i = 1,\cdot\cdot\cdot, n)
 \end{eqnarray}
 
-ラグランジュ関数Lを求め、\equref{3.21}に代入すると、
+ラグランジュ関数Lを求め、\equref{3.8}に代入し粘性を考慮すると、運動方程式は、
+
+\begin{eqnarray}
+  \equlabel{3.9}
+  M\ddot{\theta} + g(\theta) + b(\dot{\theta}) = \tau
+\end{eqnarray}
+
+このとき、
+
+\begin{eqnarray}
+  M = I + m{l_{g}}^2
+\end{eqnarray}
+
+\begin{eqnarray}
+  g(\theta) = mgl_{g}cos\theta
+\end{eqnarray}
+
+\begin{eqnarray}
+  b(\dot{\theta}) = b\dot{\theta}
+\end{eqnarray}
+
+Mは慣性項、g($\theta$)は重力項、b($\dot{\theta}$)は粘性項である。
 
 \section{シミュレータの作成}
+剛体1リンクを強化学習するためのQ学習シミュレータをpythonで実装した。シミュレータでは導出した運動方程式をEuler法により数値積分し運動学を解くことで、剛体1リンクの角度や角速度を計算する。Euler法は上微分方程式を解く手法の1つである。本章では\equref{3.13}、\equref{3.14}を用いて計算を行った。\\
+
+\begin{eqnarray}
+  \equlabel{3.13}
+  b(\dot{\theta}) = b\dot{\theta}
+\end{eqnarray}
+
+\begin{eqnarray}
+  \equlabel{3.14}
+  b(\dot{\theta}) = b\dot{\theta}
+\end{eqnarray}
+
+Euler法の時間ステップは1 ms である。また、各エピソードごとに出力したステップごとの時系列データを基に、pythonライブラリのmatplotlibによりリンク挙動をアニメーション表示するコードを作成した。
 \section{強化学習の設定}
 本章の強化学習を行うにあたって、状態、行動、報酬、その他を設定した。
 \subsection{状態}
@@ -81,24 +115,28 @@ Q学習はQ値をQテーブルと呼ばれる状態と行動で表される表�
 角度の範囲は-180 deg$\leq$$\theta$$\leq$180 deg、角速度の範囲は-2.0 m/s$\leq$$\dot{\theta}$$\leq$2.0 m/sとした。
 また、分割数は各状態4分割であり、全ての状態を$4^{2}$=16通りで表すことができる。
 \subsection{行動}
-行動は、全3通りに設定した。回転ジョイントにかかるトルク[N]を-1.0、0、+1.0のいずれかを$\varepsilon$-greedt法に基づき選択した。
+行動は、全3通りに設定した。回転ジョイントにかかるトルク[N]の選択肢を-5.0、0、+5.0とし、いずれかを$\varepsilon$-greedt法に基づき選択した。
 \subsection{報酬}
-報酬の設計について、\equref{rewardA}に示す。
+報酬の設計について、\equref{3.15}に示す。リンクの角速度を報酬とすることで、リンクの角速度を大きくする設定とした。
+
 \begin{eqnarray}
-  \equlabel{rewardA}
-  reward=reward_{scale}\times(\theta_N^2+\dot{\theta}_N^2
-  +0.1\times(\theta_{N+1}-\theta_N)^2
-  +0.1\times(\dot{\theta}_{N+1}-\dot{\theta}_N)^2)
+  \equlabel{3.15}
+  reward = \dot{\theta}
 \end{eqnarray}
-\equref{rewardA}において、$\theta_N$は現在のステップのリンクの角度、$\dot{\theta}_N$は現在のステップのリンクの角速度、
-$\theta_{N+1}$は1ステップ先のリンクの角度、$\dot{\theta}_{N+1}$は1ステップ先のリンクの角速度である。
+
 また、$reward_{scale}$は報酬スケールを調整するための係数である。本章において、$reward_{scale}$は0.01とした。\\
 次に罰則条件ついて、角度が$\theta$>-$\pi/2$または$\pi/2$<$\theta$の範囲にリンクがある際、報酬に-500の罰則を与える設定とした。
 この報酬の設計により、リンクの速度が大きいほど報酬が大きくなる。1ステップのリンクの角度、角速度の変化量を2乗することで、
 よりリンクの速度に重みを持たせた設計となっている。また、罰則条件の追加により、長時間の罰則範囲での振動を回避するためにリンク速度が大きくなることを期待した。
 \subsection{その他}
-本検証において、学習率$\alpha$=0.1、割引率$\gamma$=0.9、$\varepsilon$=0.3とした。
-また、エピソード数を30、時間ステップdtを0.01、1エピソードあたりのステップ数を6000とし、60秒間の剛体1リンクのリンク速度最適化を行った。
+本検証において、学習率$\alpha$=0.1、割引率$\gamma$=0.9とした。$\varepsilon$は\equref{3.16}であり、エピソードが進むにつれてランダム値を選択する確率を小さくする設定とした。
+
+\begin{eqnarray}
+  \equlabel{3.16}
+  \epsilon = 0.3 \times ({0.99}^(episode + 1))
+\end{eqnarray}
+
+また、エピソード数を1000、時間ステップdtを0.01、1エピソードあたりのステップ数を3000とし、30秒間の剛体1リンクのリンク速度最適化を行った。
 \section{パラメータの設定}
 パラメータの設定について、表\tabref{3.1}に示す。
 \begin{table}[tb]
