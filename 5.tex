@@ -17,8 +17,42 @@
 分割数は各角度が5分割、各角速度が2分割であり、全ての状態を$5^{4}\times 2^{4}$=10000通りで表すことができる。
 \subsection{行動}
 行動は、全625通りに設定した。肩関節にかかるトルクを正2通り、0、負2通りの計5通り、同様に肘関節にかかるトルクも正2通り、0、負2通りの計5通りとした。
-これにより、Qテーブルは256$\times$9=2304通りで表すことができる。
+これにより、Qテーブルは10000$\times$625=6250000通りで表すことができる。
 \subsection{報酬}
+本章では、投擲物の飛距離を報酬とした。投擲物のモデル化は行っていないため、投射中の投擲物に生じる空気抵抗等は考慮しないものとする。\\
+飛距離の計算にあたり、ピッチ、ロール、ヨーの3方向成分の手先速度をMuJoCoより取得し、それぞれ$v_{p}$、$v_{r}$、$v_{y}$とした。手先速度成分の合成は、
+
+\begin{eqnarray}
+  \equlabel{5.1}
+  v_{syn} = \sqrt{v_{p}^{2} + v_{r}^{2} + v_{y}^{2}}
+\end{eqnarray}
+
+\begin{eqnarray}
+  \equlabel{5.2}
+  v_{pr} = \sqrt{v_{p}^{2} + v_{r}^{2}}
+\end{eqnarray}
+
+であり、\equref{5.1}、\equref{5.2}より投射角$\theta_{v}$は、
+
+\begin{eqnarray}
+  \equlabel{5.3}
+  \theta_{v} = \arctan2(\frac{v_{y}}{v_{pr}})
+\end{eqnarray}
+
+各ステップ時のヨー軸成分の座標$h_{y}$を手先高さとする。しかし、この座標は肩関節を原点とした時の値であり、本来の手先高さは地面から肩関節までの高さを考慮する必要がある。よって、身長を$L$としたときの手先高さ$h$は、
+
+\begin{eqnarray}
+  \equlabel{5.4}
+  h = 0.818L + h_{y}
+\end{eqnarray}
+
+リリース時の手先高さを考慮した投射時間$t$は、
+
+\begin{eqnarray}
+  \equlabel{5.5}
+  t = \frac{v_{syn}\sin\theta_{v} + \sqrt{{v_{syn}}^2\sin^2\theta_{syn} + 2gh}}{g}
+\end{eqnarray}
+
 \subsection{その他}
 \section{投擲物の重さに応じた最適投擲フォームの比較}
 \subsection{シミュレーション設定}
