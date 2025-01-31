@@ -53,6 +53,62 @@
   t = \frac{v_{syn}\sin\theta_{v} + \sqrt{{v_{syn}}^2\sin^2\theta_{syn} + 2gh}}{g}
 \end{eqnarray}
 
+
+以上より、飛距離$D$は\equref{5.1}、\equref{5.3}、\equref{5.5}を用いて、
+
+\begin{eqnarray}
+  \equlabel{5.6}
+  D = v_{syn} \cdot \cos\theta_{v} \cdot t
+\end{eqnarray}
+
+この報酬により、より直接的に遠投を行うための投擲フォームを導出することができる。また、2次元のときと同様に、罰則として累積消費エネルギーを採用し、\equref{5.11}で計算した。
+
+\begin{eqnarray}
+  \equlabel{5.7}
+  CE_{p}&=&\int \tau_{p}(t)\cdot\dot{\theta}_{p} dt\\
+        &\approx&|\tau_{p}(t)\cdot\dot{\theta}_{p}|\cdot\Delta t
+\end{eqnarray}
+
+\begin{eqnarray}
+  \equlabel{5.8}
+  CE_{r}&=&\int \tau_{r}(t)\cdot\dot{\theta}_{r} dt\\
+        &\approx&|\tau_{r}(t)\cdot\dot{\theta}_{r}|\cdot\Delta t
+\end{eqnarray}
+
+\begin{eqnarray}
+  \equlabel{5.9}
+  CE_{y}&=&\int \tau_{y}(t)\cdot\dot{\theta}_{y} dt\\
+        &\approx&|\tau_{y}(t)\cdot\dot{\theta}_{y}|\cdot\Delta t
+\end{eqnarray}
+
+$\tau_{p},\tau_{r},\tau_{y}$はそれぞれ肩関節ピッチ軸まわり、ロール軸まわり、ヨー軸まわりに与えるトルクである。また、$CE_{p},CE_{r},CE_{y}$はそれぞれ肩関節ピッチ軸まわり、ロール軸まわり、ヨー軸まわりの累積消費エネルギーであり、肩関節の累積消費エネルギーの合計は、
+
+\begin{eqnarray}
+  \equlabel{5.10}
+  CE_{s} = CE_{p} + CE_{r} + CE_{y}
+\end{eqnarray}
+
+肘関節の累積消費エネルギーは、
+
+\begin{eqnarray}
+  \equlabel{5.11}
+  CE_{e}&=&\int \tau_{e}(t)\cdot\dot{\theta}_{e} dt\\
+        &\approx&|\tau_{e}(t)\cdot\dot{\theta}_{e}|\cdot\Delta t
+\end{eqnarray}
+
+$\tau_{e}$は肘関節に与えるトルクである。よって、全体の累積消費エネルギーは、
+
+\begin{eqnarray}
+  \equlabel{5.12}
+  CE = CE_{s} + CE_{e}
+\end{eqnarray}
+
+以上より、報酬の設計は、
+\begin{eqnarray}
+  \equlabel{5.13}
+  Reward = D - CE
+\end{eqnarray}
+
 \subsection{その他}
 \section{投擲物の重さに応じた最適投擲フォームの比較}
 \subsection{シミュレーション設定}
