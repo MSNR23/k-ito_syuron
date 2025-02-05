@@ -3,8 +3,7 @@
 \section{はじめに}
 本章では，2次元モデルによる投擲物の重さに応じた投擲フォームの導出・比較により，考察した投擲フォーム戦略について述べる．同様に腕の長さに応じた投擲フォームの比較により，考察した投擲フォーム戦略について述べる．
 \section{動力学モデル}
-本章の検証で用いた動力学モデルを\figref{4.0.eps}に示す．人間の腕を肩関節1自由度と肘関節1自由度の計2自由度から構成される2次元剛体2リンクとしてモデル化した．
-\fig{4.0.eps}{width=0.8\hsize}{2D rigid body 2 links}
+本章の検証で用いた動力学モデルを\figref{4.0.eps}に示す．人間の腕を肩関節1自由度と肘関節1自由度の計2自由度から構成される2次元剛体2リンクとしてモデル化した．\\
 ラグランジュの方法を用いて導いた2次元剛体2リンクの運動方程式は，次の通りである．\\
 各リンクの重心位置$o_{s_{1}}$,$o_{s_{2}}$は，
 
@@ -149,8 +148,11 @@ $\theta_{2}$についての運動方程式
 \end{eqnarray}
 
 $M(\theta)$は慣性行列，$h(\theta, \dot{\theta})$はコリオリ力の項，$g(\theta)$は重力項，$b(\dot{\theta})$は粘性項である．
+
+\fig{4.0.eps}{width=1.0\hsize}{2D rigid body 2 links}
+
 \section{シミュレータの作成}
-2次元剛体2リンクを強化学習するためのシミュレータをpythonで実装した．シミュレータでは導出した運動方程式をRunge-kutta法により数値積分し運動学を解くことで，2次元剛体2リンクの角度や角速度を計算する．Runge-kutta法は常微分方程式を解く手法の1つであり，Euler法より高い精度を得ることができる．
+2次元剛体2リンクを強化学習するためのシミュレータをpythonで実装した．シミュレータでは導出した運動方程式をRunge-kutta法\cite{runge-kutta}により数値積分し運動学を解くことで，2次元剛体2リンクの角度や角速度を計算する．Runge-kutta法は常微分方程式を解く手法の1つであり，Euler法より高い精度を得ることができる．
 \section{強化学習の設定}
 \subsection{状態}
 状態変数は4つとし，肩関節の角度$\theta_{1}$，角速度$\dot{\theta}_{1}$,肘関節の角度$\theta_{2}$，角速度$\dot{\theta}_{2}$とした．\\
@@ -177,7 +179,7 @@ $M(\theta)$は慣性行列，$h(\theta, \dot{\theta})$はコリオリ力の項�
 $\theta_{v}$ $\le$ 0，180 $\le$ $\theta_{v}$のとき，0\\
 \end{flushleft}
 
-この条件により，$\theta_{v}$が45 degまたは135 degのときに報酬最大となる．これは，投擲物の遠投時に最も有効な角度である．
+この条件により，$\theta_{v}$が45 degまたは135 degのときに報酬最大となる．これは，投擲物の遠投時に最も有効な角度\cite{angle}である．
 これらの角度からリリース時の角度が離れるにつれて報酬が小さくなっていく．
 よって投擲方向は指定せずにより投擲物の飛距離を大きくするためのリリースポイントの報酬を大きくすることができる．\\
 手先速度$v_{2}$について，
@@ -240,14 +242,13 @@ $\tau_{1}$は肩関節に与えるトルク，$\tau_{2}$は肘関節に与える
 1タイムステップは0.005 sであり，1エピソード内のステップ数は2000，すなわち，10 sとした．エピソード数に関しては，学習が収束するまで制限なく行うものとした．
 \section{投擲物の重さに応じた最適投擲フォームの比較}
 \subsection{シミュレーション設定}
-本検証で用いたパラメータを\tabref{4.1}に示す．身体のサイズは，身長1.72 m，体重70 kgの人間の各部位のサイズとした．
-投擲物は，野球の硬式球と砲丸の重さを参考に，0.14 kg と7.24 kg とした．
+本検証で用いたパラメータを\tabref{4.1}に示す\cite{irving}．身体のサイズは，身長1.72 m，体重70 kgの人間の各部位のサイズとした．
+投擲物は，野球の硬式球と砲丸の重さを参考に，0.14 kg\cite{horiuchi} と7.24 kg\cite{haq} とした．
 \begin{table}[tb]
   \tablabel{4.1}
   \begin{center}
     \caption{Parameters which are used for 2-link simulation}
-    
-    \begin{tabular}{c c c}
+    \begin{tabular}{c|c|c}
       \hline
       Parameters & Unit & Values \\
       \hline
@@ -303,13 +304,13 @@ $\tau_{1}$は肩関節に与えるトルク，$\tau_{2}$は肘関節に与える
 
 腕を360 deg 回転させるとき，重力の影響で$\theta_{1}$，$\theta_{2}$が0から90 deg に振り上げる際に最もトルクが必要である．そのため，$\theta_{1}$ = $\theta_{2}$ = 0の際に各関節にかかるトルクを計算し，その計算結果を基に計算した．また，肘関節の可動範囲は0 $\le$ $\theta_{2}$ $\le$ 150 deg であるが，可動範囲の端である$\theta_{2}$ = 0 または $\theta_{2}$ = 150 degでは，可動範囲内に戻ろうとする力がはたらく．これを考慮し，可動範囲の端では肘関節が可動範囲内に戻る方向に20 Nm のトルクを加算する設定とした．
 
-重さ0.14 kg の投擲物と重さ7/24 kg の投擲物での学習の際に用いるそれぞれの\equref{2.27}から\equref{2.32}の計算結果を\tabref{4.2}に示す．
+重さ0.14 kg の投擲物と重さ7.24 kg の投擲物での学習の際に用いるそれぞれの\equref{2.27}から\equref{2.32}の計算結果を\tabref{4.2}に示す．
 
 \begin{table}[tb]
   \tablabel{4.2}
   \begin{center}
     \caption{Calculation Results of $l_{g1}$,$l_{g2}$,$I_{1}$,$I_{2}$}
-    \begin{tabular}{c c c c}
+    \begin{tabular}{c|c|c|c}
       \hline
       Parameters & unit & Values of baseball & Values of cannonball \\
       \hline
@@ -335,8 +336,7 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
   \tablabel{4.3}
   \begin{center}
     \caption{Data at the moment of release（0.14 kg vs 7.24 kg）}
-
-    \begin{tabular}{c c c c}
+    \begin{tabular}{c|c|c|c}
       \hline
       Parameters & unit & Values of 0.14 kg & Values of 7.24 kg \\
       \hline
@@ -352,10 +352,11 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
 また，\figref{4.5.eps}は投擲開始からリリースまでの肩関節・肘関節のトルクの推移，\figref{4.6.eps}は投擲開始からリリースまでの肩関節・肘関節の角速度の推移である．\figref{4.5.eps}，\figref{4.6.eps}の左図が重さ0.14 kg の投擲物を遠投するための投擲フォームの各時系列，右図がの重さ7.24 kg の投擲物を遠投するための投擲フォームの各時系列である．\\
 トルクの時系列より，重さ0.14 kg の投擲物を遠投するための投擲フォームは，肩関節と肘関節の運動連鎖を活かした投擲フォーム戦略の傾向がみられた．投擲開始からまず肩関節のトルクによって腕を回転させる．その後，約0.13 s で肩関節のトルクが腕の回転とは逆方向にトルクが生じ，肘関節のトルクが腕の回転と同方向にトルクが生じリリースを迎える．これは肩関節のエネルギーを肘関節に伝達することでより手先方向のエネルギーを大きくしていると考えられる．また，肩関節と肘関節の角速度の推移より，トルクの入力に運動連鎖の傾向が見られる約0.13 s から肩関節の角速度が減少し肘関節の角速度が増加する．リリース時には肩関節と肘関節の角速度が逆転していることから最後は前腕の振りを如何に大きくするのかが重要であると考えられる．一方，重さ7.24 kg の投擲物を遠投するための投擲フォームは，肩関節による影響が大きい投擲フォームの傾向がみられた．投擲開始から肩関節のトルクによって腕を回転させる傾向は重さ0.14 kg の投擲物の際と同様であるが，肩関節のトルクが0となる瞬間が数回生じ，また肘関節のトルクは肘を屈曲させる方向に生じ続けている．これは，肩関節のトルクによる腕の回転はペナルティである累積消費エネルギーへの影響が大きく，消費を抑制するためであると考えられる．また，肘関節のトルクによって肘を屈曲させ続ける傾向にある理由として，モーメントアームを小さくすることで肩の回転に消費するエネルギーを抑制するためであると考えられる．加えて肩関節と肘関節の角速度の推移より，肘関節の角速度が正となるのが遅く，リリースの瞬間も肩関節の角速度が肘関節の角速度より大きい．すなわち，肩関節の影響が重さ0.14 kg の投擲物を遠投する際よりも大きいと考えられる．\\
 
-\fig{4.3.eps}{width=0.8\hsize}{Throwing form from start to release(0.14 kg thrown object)}
-\fig{4.4.eps}{width=0.8\hsize}{Throwing form from start to release(7.24 kg thrown object)}
-\fig{4.5.eps}{width=1.0\hsize}{Transition of shoulder and elbow torque from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
-\fig{4.6.eps}{width=1.0\hsize}{Angular velocity of shoulder and elbow torque from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
+\fig{4.3.eps}{width=1.0\hsize}{Throwing form from start to release(0.14 kg thrown object)}
+\fig{4.4.eps}{width=1.0\hsize}{Throwing form from start to release(7.24 kg thrown object)}
+\clearpage
+\fig{4.5.eps}{width=0.8\hsize}{Transition of shoulder and elbow torque from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
+\fig{4.6.eps}{width=0.8\hsize}{Angular velocity of shoulder and elbow torque from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
 
 \section{腕の長さに応じた最適投擲フォームの比較}
 \subsection{シミュレーション設定}
@@ -365,7 +366,7 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
   \tablabel{4.3}
   \begin{center}
     \caption{Parameters which are used for 2-link simulation}
-    \begin{tabular}{c c c}
+    \begin{tabular}{c|c|c}
       \hline
       Parameters & Unit & Values \\
       \hline
@@ -392,7 +393,7 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
   \tablabel{4.4}
   \begin{center}
     \caption{Calculation Results of $l_{g1}$,$l_{g2}$,$I_{1}$,$I_{2}$}
-    \begin{tabular}{c c c c}
+    \begin{tabular}{c|c|c|c}
       \hline
       Parameters & unit & Values of 1.72 m & Values of 1.90 m \\
       \hline
@@ -420,7 +421,7 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
   \begin{center}
     \caption{Data at the moment of release（1.72 m vs 1.90 m）}
 
-    \begin{tabular}{c c c c}
+    \begin{tabular}{c|c|c|c}
       \hline
       Parameters & unit & Values of 1.72 m & Values of 1.90 m \\
       \hline
@@ -436,6 +437,7 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
 また，\figref{4.9.eps}は投擲開始からリリースまでの肩関節・肘関節のトルクの推移，\figref{4.10.eps}は投擲開始からリリースまでの肩関節・肘関節の角速度の推移である．\figref{4.9.eps}，\figref{4.10.eps}の左図が身長1.72 m の人間に基づいた腕の長さによる投擲フォームの各時系列，右図が身長1.90 m の人間に基づいた腕の長さによる投擲フォームの各時系列である．\\
 トルクの時系列より，身長1.90 m の人間に基づいた腕の長さによる投擲フォームは，身長1.72 m の人間に基づいた腕の長さによる投擲フォームと同様に運動連鎖を活かした投擲フォーム戦略の傾向がみられた．しかし，投擲開始から肩関節のトルクによって腕を回転させる傾向は同じであるが，身長1.90 m の人間に基づいた腕の長さによる投擲フォームは肘関節のトルクを腕の回転方向とは反対の，肘関節を屈曲させる方向へ生じさせている．これはモーメントアームによる影響が考えられる．モーメントアームが大きいと腕の回転に必要な肩関節のトルクが大きくなるが，その分エネルギーを消費する．今回設定したトルクの大きさでは肘を伸ばしたまま腕を回転させるよりも肘を屈曲してモーメントアームを小さくして腕を回転させる方がエネルギー消費が少なく腕を回転させることができると考えられる．また，腕の長さに問わずリリース時には肘関節の角速度が肩関節の角速度を上回ることから，リリース直前に運動連鎖によってより肘関節の角速度を大きくしようとすると考えられる．
 
-\fig{4.8.eps}{width=1.0\hsize}{Throwing form from start to release(0.14 kg thrown object)}
-\fig{4.9.eps}{width=1.0\hsize}{Transition of shoulder and elbow torque from start to release(left:1.72 m tall human，right:1.90 m tall human)}
-\fig{4.10.eps}{width=1.0\hsize}{Angular velocity of shoulder and elbow torque from start to release(left:1.72 m tall human，right:1.90 m tall human)}
+\figp{4.8.eps}{width=1.0\hsize}{Throwing form from start to release(0.14 kg thrown object)}
+\clearpage
+\figh{4.9.eps}{width=0.8\hsize}{Transition of shoulder and elbow torque from start to release(left:1.72 m tall human，right:1.90 m tall human)}
+\figh{4.10.eps}{width=0.8\hsize}{Angular velocity of shoulder and elbow torque from start to release(left:1.72 m tall human，right:1.90 m tall human)}
