@@ -252,7 +252,7 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 
 \begin{table}[tb]
   \begin{center}
-    \caption{Parameters which are used for 2link-4DOF simulation}
+    \caption{Parameters which are used for 3D rigid 2 links simulation}
     \tablabel{5.5}
     \begin{tabular}{c|c|c}
       \hline
@@ -274,16 +274,15 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 
 重力加速度$g$を9.8 $\mathrm{m/s}^{2}$とする．また，前章と同様に，前腕と手と投擲物の要素を合わせて前腕リンクとしてみなすため，3つの要素を考慮して設定を行った．
 前腕の要素として，$l_{f}$を前腕長さ，$m_{f}$を前腕重さ，$l_{h}$を手長さ，$m_{h}$を手重さとした．\\
-
-次に，野球の硬式球の重さの投擲物と砲丸重さの投擲物のときのそれぞれの上腕・前腕リンクの重心までの長さ，上腕・前腕リンクの慣性モーメント，肩関節の3軸周り・肘関節に与えるトルク，肩関節の3軸周り・肘関節の粘性について，表\tabref{5.6}に示す．各リンクの重心までの長さと慣性モーメントについての計算は，\equref{2.26}から\equref{2.31}を基に行った．各関節に与えるトルクについて，肩関節ピッチ軸周りとロール軸周り，肘関節はそれぞれ5種類のトルクから選択される．一方，肩関節ヨー軸周りのトルクについては，スプライン補間によって設定した可動範囲に基づき，可動範囲内にトルクが収まるように与えるトルクも補完する設定とした．
+　次に，身長1.72 m の人間に基づいた腕の長さでの投擲の際と身長1.90 m の人間に基づいた腕の長さでの投擲の際のそれぞれの上腕・前腕リンクの重心までの長さ，上腕・前腕リンクの慣性モーメント，肩関節の3軸周り・肘関節に与えるトルク，肩関節の3軸周り・肘関節の粘性係数について，表\tabref{5.6}に示す．各リンクの重心までの長さと慣性モーメントについての計算は，\equref{2.26}から\equref{2.31}を基に行った．各関節に与えるトルクについて，肩関節ピッチ軸周りとロール軸周り，肘関節はそれぞれ5種類のトルクから選択される．一方，肩関節ヨー軸周りのトルクについては，スプライン補間によって設定した可動範囲に基づき，可動範囲内にトルクが収まるように与えるトルクも補完する設定とした．
 
 \begin{table}[tb]
   \begin{center}
-    \caption{Calculation Results of $l_{g}$，$I$，$\tau$，$b$}
+    \caption{Calculation Results of $l_{g}$，$I$，$\tau$，$b$ for 3D rigid 2 links simulation\newline 　　　　（1.72 m vs 1.90 m）}
     \tablabel{5.6}
     \begin{tabular}{c|c|c|c}
       \hline
-      Parameters & unit & Values of baseball & Values of cannonball \\
+      Parameters & unit & Values of 1.72 m & Values of 1.90 m \\
       \hline
       $l_{g1}$ & m & 0.16 & 0.18 \\
       $l_{g2}$ & m & 0.21 & 0.23 \\
@@ -302,9 +301,9 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
   \end{center}
 \end{table}
 
-以上の設定をふまえ，投擲物に応じた投擲フォームの強化学習を行った際の報酬の遷移を\figref{5.10.eps}に示す．身長1.72 m の人間に基づいた腕の長さによる遠投をするための投擲フォームは2983エピソード，身長1.90 m の人間に基づいた腕の長さによる遠投をするための投擲フォームは3060エピソードを採用した．
+以上の設定をふまえ，腕の長さに応じた投擲フォームの強化学習を行った際の報酬の遷移を\figref{5.10.eps}に示す．身長1.72 m の人間に基づいた腕の長さによる遠投をするための投擲フォームは2983エピソード，身長1.90 m の人間に基づいた腕の長さによる遠投をするための投擲フォームは3060エピソードを採用した．
 
-\figt{5.10.eps}{width=1.0\hsize}{Reward progress(left:1.72 m tall human，right:1.90 m tall human)}
+\figt{5.10.eps}{width=1.0\hsize}{Reward progress for 3D rigid 2 links（left:1.72 m tall human，right:1.90 m tall \newline 　　　　human）}
 
 \subsection{結果・考察}
 初期状態について，投擲物の重さによる投擲フォームの比較と同様に$\theta_{p}$，$\theta_{r}$，$\theta_{y}$，$\theta_{e}$はランダム値，$\dot{\theta}_{p}$，$\dot{\theta}_{r}$，$\dot{\theta}_{y}$，$\dot{\theta}_{e}$は0とした．腕の長さに応じた遠投をするための投擲フォーム戦略の結果・考察を以下に示す．
@@ -312,7 +311,7 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 
 \begin{table}[tb]
   \begin{center}
-    \caption{Data at the moment of release}
+    \caption{Data at the moment of release for 3D rigid 2 links（1.72 m vs 1.90 m）}
     \tablabel{5.7}
     \begin{tabular}{c|c|c|c}
       \hline
@@ -336,9 +335,9 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 　以上より，身長1.72 m の人間に基づいた腕の長さによる遠投をするための投擲フォームと身長1.90 m の人間に基づいた腕の長さによる遠投をするための投擲フォームの比較によりみられる戦略は，ともに運動連鎖による肩関節の回転を重要視した戦略が考えられる．
 
 \clearpage
-\figt{5.16.eps}{width=1.0\hsize}{Throwing form from start to release from a plane perpendicular to the pitch axis(1.90 m tall human)}
-\fig{5.17.eps}{width=1.0\hsize}{Throwing form from start to release from a plane perpendicular to the roll axis(1.90 m tall human)}
-\fig{5.8.eps}{width=1.0\hsize}{Transition of shoulder and elbow torque from start to release(left:1.72 m tall human，right:1.90 m tall human)}
-\fig{5.23.eps}{width=1.0\hsize}{Transition of shoulder 3 degrees of freedom and elbow 1 degree of freedom angular velocity from start to release(left:1.72 m tall human，right:1.90 m tall human)}
-\fig{5.24.eps}{width=1.0\hsize}{Transition of hand speed from start to release(left:1.72 m tall human，right:1.90 m tall human)}
-\fig{5.25.eps}{width=1.0\hsize}{Transition of shoulder and elbow torque(left:1.72 m tall human from 0.28 s to release，right:1.90 m tall human from 0.80 s to release)}
+\figt{5.16.eps}{width=1.0\hsize}{Throwing form from start to release for 3D rigid 2 links from a plane \newline 　　　　perpendicular to the pitch axis（1.90 m tall human）}
+\fig{5.17.eps}{width=1.0\hsize}{Throwing form from start to release for 3D rigid 2 links from a plane \newline 　　　　perpendicular to the roll axis（1.90 m tall human）}
+\fig{5.8.eps}{width=1.0\hsize}{Transition of shoulder and elbow torque for 3D rigid 2 links from start to release\newline 　　　　（left:1.72 m tall human，right:1.90 m tall human）}
+\fig{5.23.eps}{width=1.0\hsize}{Transition of shoulder 3 degrees of freedom and elbow 1 degree of freedom \newline 　　　　angular velocity from start to release for 3D rigid 2 links（left:1.72 m tall human，\newline 　　　　right:1.90 m tall human）}
+\fig{5.24.eps}{width=1.0\hsize}{Transition of hand speed from start to release for 3D rigid 2 links（left:1.72 m\newline 　　　　 tall human，right:1.90 m tall human）}
+\fig{5.25.eps}{width=1.0\hsize}{Transition of shoulder and elbow torque for 3D rigid 2 links（left:1.72 m tall \newline 　　　　human from 0.28 s to release，right:1.90 m tall human from 0.80 s to release）}
