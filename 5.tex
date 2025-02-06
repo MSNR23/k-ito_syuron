@@ -6,7 +6,7 @@
 \section{動力学モデル}
 本章で用いた動力学モデルを\figref{5.1.eps}に示す．本章では，\figref{5.2.eps}で示す物理エンジンMuJoCo\cite{mujoco}\cite{mujoco2}に標準搭載されているhumanoidモデル「Unitree G1」\cite{unitreeg1}を改変し，人間の腕を肩関節3自由度と肘関節1自由度の計4自由度から構成される3次元剛体2リンクとしてモデル化した．なお，\figref{5.1.eps}において，肩関節から肘関節までを上腕リンク，肘関節から手先までを前腕リンクとし，手首や指の自由度は0とした．また，体幹リンクも自由度0とし，世界座標に固定した．
 
-\fig{5.1.eps}{width=0.8\hsize}{3D rigid body 2 links}
+\fig{5.1.eps}{width=0.8\hsize}{3D rigid 2 links（stabilization of the trunk）}
 \fig{5.2.eps}{width=0.8\hsize}{Unitree G1}
 
 \section{シミュレータの作成}
@@ -41,13 +41,13 @@
 \end{table}
 
 \tabref{5.1}の可動範囲は各自由度ごとに見ると人間が可能な姿勢である．しかし人間の各関節は互いに干渉するため，組み合わせ次第では人間が不可能な姿勢となる．よって，肩関節ピッチ軸周り，ロール軸周り，ヨー軸周り，肘関節周りの順に，可動範囲を人間が可能な姿勢に収まるように設定した．\\
-まず，肩関節ピッチ軸周りの可動範囲に基づいた肩関節ロール軸周りの可動範囲について確認したところ，全ての可動範囲で人間が可能な姿勢であったためそのまま可動範囲として採用した．次に肩関節ピッチ軸周りとロール軸周りに基づいた可動範囲について確認したところ，組み合わせ次第で人間が不可能な姿勢を取ることを確認した．そこで，スプライン補間\cite{spline}を用いて肩関節ピッチ軸周りとロール軸周りの角度によって可動範囲が変動するように設定した．最後に肩関節に基づいた肘関節について確認したところ，全ての可動範囲で人間が可能な姿勢であったため，そのまま可動範囲として設定した．以上の設定により，全ての関節角度の組み合わせで人間が可能な姿勢を取ることができる．なお，計算精度上，数 deg 可動範囲外の角度を取ることがあるが，異常姿勢ではないため問題ないとした．
+　まず，肩関節ピッチ軸周りの可動範囲に基づいた肩関節ロール軸周りの可動範囲について確認したところ全ての可動範囲で人間が可能な姿勢であったため，そのまま可動範囲として採用した．次に肩関節ピッチ軸周りとロール軸周りに基づいた可動範囲について確認したところ，組み合わせ次第で人間が不可能な姿勢を取ることを確認した．そこで，スプライン補間\cite{spline}を用いて肩関節ピッチ軸周りとロール軸周りの角度によって可動範囲が変動するように設定した．最後に肩関節に基づいた肘関節について確認したところ全ての可動範囲で人間が可能な姿勢であったため，そのまま可動範囲として設定した．以上の設定により，全ての関節角度の組み合わせで人間が可能な姿勢を取ることができる．なお，計算精度上，数 deg 可動範囲外の角度を取ることがあるが，異常姿勢ではないため問題ないとした．
 
 
 \section{強化学習の設定}
 \subsection{状態}
 状態変数は8つとし，肩関節ピッチ軸周りの角度$\theta_{p}$，角速度$\dot{\theta}_{p}$,肩関節ロール軸周りの角度$\theta_{r}$，角速度$\dot{\theta}_{r}$,肩関節ヨー軸周りの角度$\theta_{y}$，角速度$\dot{\theta}_{y}$,肘関節の角度$\theta_{e}$，角速度$\dot{\theta}_{e}$とした．\\
-各関節の角度については，5.4章の通りである．
+　各関節の角度については\tabref{5.1}の通りであり，肩関節ロール軸周りのみスプライン補間に基づく範囲とした．
 また，各関節の角速度については，$-10.0$ m/s $\le$ $\dot{\theta}_{1}$ $\le$ 10.0 m/s，$-10.0$ m/s $\le$ $\dot{\theta}_{2}$ $\le$ 10.0 m/sとした．
 分割数は各角度が5分割，各角速度が2分割であり，全ての状態を$5^{4}\times 2^{4}=10000$通りで表すことができる．
 \subsection{行動}
@@ -59,12 +59,12 @@
 
 \begin{eqnarray}
   \equlabel{5.1}
-  v_{syn} = \sqrt{v_{p}^{2} + v_{r}^{2} + v_{y}^{2}}
+  v_{syn} = \sqrt{{v_{p}}^{2} + {v_{r}}^{2} + {v_{y}}^{2}}
 \end{eqnarray}
 
 \begin{eqnarray}
   \equlabel{5.2}
-  v_{pr} = \sqrt{v_{p}^{2} + v_{r}^{2}}
+  v_{pr} = \sqrt{{v_{p}}^{2} + {v_{r}}^{2}}
 \end{eqnarray}
 
 であり，\equref{5.1}，\equref{5.2}より投射角$\theta_{v}$は，
@@ -141,7 +141,7 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 以上より，報酬の設計は，
 \begin{eqnarray}
   \equlabel{5.13}
-  Reward = D - CE
+  Reward = D - scale \times CE
 \end{eqnarray}
 
 \subsection{その他}
@@ -154,7 +154,7 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 投擲物は，野球の硬式球と砲丸の重さを参考に，0.14 kg と7.24 kg とした．
 \begin{table}[tb]
   \begin{center}
-    \caption{Parameters which are used for 2link-4DOF simulation}
+    \caption{Parameters which are used for 3D rigid 2 links simulation（0.14 kg vs 7.24 kg）}
     \tablabel{5.2}
     \begin{tabular}{c|c|c}
       \hline
@@ -175,16 +175,15 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 \end{table}
 重力加速度$g$を9.8 $\mathrm{m/s}^{2}$とする．また，前章と同様に，前腕と手と投擲物の要素を合わせて前腕リンクとしてみなすため，3つの要素を考慮して設定を行った．
 前腕の要素として，$l_{f}$を前腕長さ，$m_{f}$を前腕重さ，$l_{h}$を手長さ，$m_{h}$を手重さとした．\\
-
-次に，野球の硬式球の重さの投擲物と砲丸重さの投擲物のときのそれぞれの上腕・前腕リンクの重心までの長さ，上腕・前腕リンクの慣性モーメント，肩関節の3軸周り・肘関節に与えるトルク，肩関節の3軸周り・肘関節の粘性について，表\tabref{5.3}に示す．各リンクの重心までの長さと慣性モーメントについての計算は，\equref{2.26}から\equref{2.31}を基に行った．各関節に与えるトルクについて，肩関節ピッチ軸周りとロール軸周り，肘関節はそれぞれ5種類のトルクから選択される．一方，肩関節ヨー軸周りのトルクについては，スプライン補間によって設定した可動範囲に基づき，可動範囲内にトルクが収まるように与えるトルクも補完する設定とした．
+　次に，野球の硬式球の重さの投擲物と砲丸重さの投擲物のときのそれぞれの上腕・前腕リンクの重心までの長さ，上腕・前腕リンクの慣性モーメント，肩関節の3軸周り・肘関節に与えるトルク，肩関節の3軸周り・肘関節の粘性係数について，表\tabref{5.3}に示す．各リンクの重心までの長さと慣性モーメントについての計算は，\equref{2.26}から\equref{2.31}を基に行った．各関節に与えるトルクについて，肩関節ピッチ軸周りとロール軸周り，肘関節はそれぞれ5種類のトルクから選択される．一方，肩関節ヨー軸周りのトルクについては，スプライン補間によって設定した可動範囲に基づき，可動範囲内にトルクが収まるように与えるトルクも補完する設定とした．
 
 \begin{table}[tb]
   \begin{center}
-    \caption{Calculation Results of $l_{g}$，$I$，$\tau$，$b$}
+    \caption{Calculation Results of $l_{g}$，$I$，$\tau$，$b$ for 3D rigid 2 links（0.14 kg vs 7.24 kg）}
     \tablabel{5.3}
     \begin{tabular}{c|c|c|c}
       \hline
-      Parameters & unit & Values of baseball & Values of cannonball \\
+      Parameters & unit & Values of o.14 kg & Values of 7.24 kg \\
       \hline
       $l_{g1}$ & m & 0.16 & 0.16 \\
       $l_{g2}$ & m & 0.21 & 0.40 \\
@@ -204,7 +203,7 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 
 以上の設定をふまえ，投擲物に応じた投擲フォームの強化学習を行った際の報酬の遷移を\figref{5.9.eps}に示す．重さ0.14 kg の投擲物を遠投する投擲フォームは2983エピソード，重さ7.24 kg の投擲物を遠投する投擲フォームは9140エピソードを採用した．
 
-\fig{5.9.eps}{width=1.0\hsize}{Reward progress(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
+\fig{5.9.eps}{width=1.0\hsize}{Reward progress for 3D rigid 2 links（left: 0.14 kg thrown object，right: 7.24 kg \newline 　　　　thrown object）}
 
 \subsection{結果・考察}
 初期状態について，$\theta_{p}$，$\theta_{r}$，$\theta_{y}$，$\theta_{e}$はランダム値，$\dot{\theta}_{p}$，$\dot{\theta}_{r}$，$\dot{\theta}_{y}$，$\dot{\theta}_{e}$は0とした．これにより，最も報酬が高くなる時の初期姿勢を導出することができる．投擲物に応じた遠投するための投擲フォーム戦略の結果・考察を以下に示す．
@@ -212,7 +211,7 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 
 \begin{table}[tb]
   \begin{center}
-    \caption{Data at the moment of release}
+    \caption{Data at the moment of release for 3D rigid 2 links（0.14 kg vs 7.24 kg）}
     \tablabel{5.4}
     \begin{tabular}{c|c|c|c}
       \hline
@@ -232,18 +231,18 @@ $\tau_{e}$は肘関節に与えるトルクである．よって，全体の累�
 \end{table}
 
 \figref{5.7.eps}は投擲開始からリリースまでの肩関節3軸周り，肘関節周りのトルクの推移，\figref{5.21.eps}は投擲開始からリリースまでの手先速度の推移である．\figref{5.7.eps}，\figref{5.21.eps}において，左図は重さ0.14 kg の投擲物を遠投するための投擲フォームの各時系列，右図は重さ7.24 kg の投擲物を遠投するための投擲フォームの各時系列である．\\
-まず，重さ0.14 kg の投擲物を遠投するための投擲フォームについて述べる．初期姿勢は肘を伸ばして横に腕を広げた状態であったが，そこから主に肩関節ピッチ軸周りのトルクによって腕が後方に引かれている．その際，0.2 s あたりから，肘関節のトルクは肘が屈曲する方向へ入力される．その後，腕を引き切った0.35 s あたりから肩関節ヨー軸周りのトルクによって腕を前方と振り上げてリリースを迎える．その際肩関節ピッチ軸周りのトルクに注目すると正負の値を繰り返しているが，これは運動連鎖の活用の影響と考えられる．腕を前方に回転する際，肩関節ピッチ軸周りのトルクを腕の回転方向に入力し続けることで，より腕の回転に貢献できるように見える．しかし，重力の影響で最も腕を回転させるためにトルクが必要な0.35 s あたりから腕の回転とは逆方向にトルクが入力されている．これは肩関節ピッチ軸周りの関節が持つエネルギーをヨー軸周りの関節にエネルギーを伝達していると考えられる．\\
-次に，重さ7.24 kg の投擲物を遠投するための投擲フォームについて述べる．初期姿勢は肘関節を屈曲させて腕を前方高く上げている．これは，慣性モーメントの影響が考えられる．重い投擲物を持って腕を後方へ回転させると慣性モーメントの影響で肩関節や肘関節にかかる負荷が大きい．そのため，あらかじめ手先位置の高い姿勢を取ることで腕を振り上げる動作を回避しようとしていると考えられる．投擲開始から腕を後方に引く動作は無く，主に肩関節ロール軸周りのトルクによって腕が前方へ動く．この際，肘関節は肘を屈曲させる方向へトルクが入力され続けており，慣性モーメントによる腕への負担を軽減しようとしていると考えられる．0.256 s あたりから肩関節ロール軸周りと肘関節のトルクの入力が負から正となり，ロール軸周りのトルクが正から負となる．これは，重さ0.14 kg の投擲物の際と同様に，運動連鎖による前腕へのエネルギーの伝達により，肘を伸展させるエネルギーを大きくしていると考えられる．その後リリースを迎えるが，投擲方向は正面ではなく左方向となった．これは，本検証で用いた動力学モデル手首の自由度が0であること，ロール軸方向に正であれば投擲方向は問わない報酬設定の影響があると考えられる．\\
-以上より，重さ0.14 kg の投擲物の投擲フォームと重さ7.24 kg の投擲物の投擲フォームの比較よりみられる戦略の違いは，「腕の押し出し度合い」であると考えられる．\figref{5.15.eps}は投擲開始からリリースまでの，肩を基準とした際の手先高さの推移である．\figref{5.15.eps}において，左図は重さ0.14 kg の投擲物を遠投するための投擲フォームの各時系列，右図は重さ7.24 kg の投擲物を遠投するための投擲フォームの各時系列である．重さ0.14 kg の投擲物の際はリリース前に一度手先が下がってから一気に高くなるが，重さ7.24 kg の投擲物の際はほば手先高さに変化がみられない．この波形の直線度が高いほど腕の押し出し度合いが高い．よって，重さ0.14 kg の投擲物の投擲フォームは，運動連鎖による肩関節の回転を重要視した戦略が考えられる．一方，重さ7.24 kg の投擲物の投擲フォームは，肘の伸展や前腕を重要視した腕の押し出し度合いの高い戦略が考えられる．
+　まず，重さ0.14 kg の投擲物を遠投するための投擲フォームについて述べる．初期姿勢は肘を伸ばして横に腕を広げた状態であったが，そこから主に肩関節ピッチ軸周りのトルクによって腕が後方に引かれている．その際，0.2 s あたりから，肘関節のトルクは肘が屈曲する方向へ入力される．その後，腕を引き切った0.35 s あたりから肩関節ヨー軸周りのトルクによって腕を前方と振り上げてリリースを迎える．その際肩関節ピッチ軸周りのトルクに注目すると正負の値を繰り返しているが，これは運動連鎖の活用の影響と考えられる．腕を前方に回転する際，肩関節ピッチ軸周りのトルクを腕の回転方向に入力し続けることで，より腕の回転に貢献できるように見える．しかし，重力の影響で最も腕を回転させるためにトルクが必要な0.35 s あたりから腕の回転とは逆方向にトルクが入力されている．これは肩関節ピッチ軸周りの関節が持つエネルギーをヨー軸周りの関節にエネルギーを伝達していると考えられる．\\
+　次に，重さ7.24 kg の投擲物を遠投するための投擲フォームについて述べる．初期姿勢は肘関節を屈曲させて腕を前方高く上げている．これは，慣性モーメントの影響が考えられる．重い投擲物を持って腕を後方へ回転させると慣性モーメントの影響で肩関節や肘関節にかかる負荷が大きい．そのため，あらかじめ手先位置の高い姿勢を取ることで腕を振り上げる動作を回避しようとしていると考えられる．投擲開始から腕を後方に引く動作は無く，主に肩関節ロール軸周りのトルクによって腕が前方へ動く．この際，肘関節は肘を屈曲させる方向へトルクが入力され続けており，慣性モーメントによる腕への負担を軽減しようとしていると考えられる．0.256 s あたりから肩関節ロール軸周りと肘関節のトルクの入力が負から正となり，ロール軸周りのトルクが正から負となる．これは，重さ0.14 kg の投擲物の際と同様に，運動連鎖による前腕へのエネルギーの伝達により，肘を伸展させるエネルギーを大きくしていると考えられる．その後リリースを迎えるが，投擲方向は正面ではなく左方向となった．これは，本検証で用いた動力学モデル手首の自由度が0であること，ロール軸方向に正であれば投擲方向は問わない報酬設定の影響があると考えられる．\\
+　以上より，重さ0.14 kg の投擲物の投擲フォームと重さ7.24 kg の投擲物の投擲フォームの比較よりみられる戦略の違いは，「腕の押し出し度合い」であると考えられる．\figref{5.15.eps}は投擲開始からリリースまでの，肩を基準とした際の手先高さの推移である．\figref{5.15.eps}において，左図は重さ0.14 kg の投擲物を遠投するための投擲フォームの各時系列，右図は重さ7.24 kg の投擲物を遠投するための投擲フォームの各時系列である．重さ0.14 kg の投擲物の際はリリース前に一度手先が下がってから一気に高くなるが，重さ7.24 kg の投擲物の際はほば手先高さに変化がみられない．この波形の直線度が高いほど腕の押し出し度合いが高い．よって，重さ0.14 kg の投擲物の投擲フォームは，運動連鎖による肩関節の回転を重要視した戦略が考えられる．一方，重さ7.24 kg の投擲物の投擲フォームは，肘の伸展や前腕を重要視した腕の押し出し度合いの高い戦略が考えられる．
 
-\fig{5.11.eps}{width=1.0\hsize}{Throwing form from start to release from a plane perpendicular to the pitch axis(0.14 kg thrown object，1.72 m tall human)}
-\fig{5.12.eps}{width=1.0\hsize}{Throwing form from start to release from a plane perpendicular to the roll axis(0.14 kg thrown object)}
-\fig{5.13.eps}{width=1.0\hsize}{Throwing form from start to release from a plane perpendicular to the pitch axis(7.24 kg thrown object)}
-\fig{5.14.eps}{width=1.0\hsize}{Throwing form from start to release from a plane perpendicular to the roll axis(7.24 kg thrown object)}
-\fig{5.7.eps}{width=1.0\hsize}{Transition of shoulder 3 degrees of freedom and elbow 1 degree of freedom torque from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
+\fig{5.11.eps}{width=1.0\hsize}{Throwing form from start to release for 3D rigid 2 links from a plane perpendicular \newline 　　　　to the pitch axis（0.14 kg thrown object，1.72 m tall human）}
+\fig{5.12.eps}{width=1.0\hsize}{Throwing form from start to release for 3D rigid 2 links from a plane perpendicular \newline 　　　　to the roll axis（0.14 kg thrown object）}
+\fig{5.13.eps}{width=1.0\hsize}{Throwing form from start to release for 3D rigid 2 links from a plane perpendicular \newline 　　　　to the pitch axis（7.24 kg thrown object）}
+\fig{5.14.eps}{width=1.0\hsize}{Throwing form from start to release for 3D rigid 2 links from a plane perpendicular \newline 　　　　to the roll axis（7.24 kg thrown object）}
+\fig{5.7.eps}{width=1.0\hsize}{Transition of shoulder 3 degrees of freedom and elbow 1 degree of freedom torque \newline 　　　　from start to release for 3D rigid 2 links（left: 0.14 kg thrown object，right: 7.24 \newline 　　　　kg thrown object）}
 % \fig{5.20.eps}{width=1.0\hsize}{Transition of shoulder 3 degrees of freedom and elbow 1 degree of freedom angular velocity from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
-\fig{5.21.eps}{width=1.0\hsize}{Transition of hand speed from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
-\fig{5.15.eps}{width=1.0\hsize}{Transition of hand height relative shoulder from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
+\fig{5.21.eps}{width=1.0\hsize}{Transition of hand speed from start to release for 3D rigid 2 links\newline 　　　　（left: 0.14 kg thrown object，right: 7.24 kg thrown object）}
+\fig{5.15.eps}{width=1.0\hsize}{Transition of hand height relative shoulder from start to release for 3D rigid \newline 　　　　2 links（left: 0.14 kg thrown object，right: 7.24 kg thrown object）}
 
 \clearpage
 \section{腕の長さに応じた最適投擲フォームの比較}
