@@ -4,11 +4,10 @@
 本章では，2次元モデルによる投擲物の重さに応じた投擲フォームの導出・比較により，考察した投擲フォーム戦略について述べる．同様に腕の長さに応じた投擲フォームの比較により，考察した投擲フォーム戦略について述べる．
 \section{動力学モデル}
 本章の検証で用いた動力学モデルを\figref{4.0.eps}に示す．人間の腕を肩関節1自由度と肘関節1自由度の計2自由度から構成される2次元剛体2リンクとしてモデル化した．\\
-
-ラグランジュの方法を用いて導いた2次元剛体2リンクの運動方程式は，次の通りである．\\
+　ラグランジュの方法を用いて導いた2次元剛体2リンクの運動方程式は，次の通りである．\\
 各リンクの重心位置$o_{s_{1}}$,$o_{s_{2}}$は，
 
-\fig{4.0.eps}{width=1.0\hsize}{2D rigid body 2 links}
+\fig{4.0.eps}{width=1.0\hsize}{2D rigid 2 links}
 
 \begin{eqnarray}
   o_{s_{1}} = 
@@ -153,7 +152,7 @@ $\theta_{2}$についての運動方程式
 $M(\theta)$は慣性行列，$h(\theta, \dot{\theta})$はコリオリ力の項，$g(\theta)$は重力項，$b(\dot{\theta})$は粘性項である．
 
 \section{シミュレータの作成}
-2次元剛体2リンクを強化学習するためのシミュレータをpythonで実装した．シミュレータでは導出した運動方程式をRunge-Kutta法\cite{runge-Kutta}により数値積分し運動学を解くことで，2次元剛体2リンクの角度や角速度を計算する．Runge-Kutta法は常微分方程式を解く手法の1つであり，Euler法は$\delta T$を1桁細かくすると誤差を1桁減少させるのに対し，Runge-Kutta方は誤差を4桁減少させることができる．
+2次元剛体2リンクを強化学習するためのシミュレータをpythonで実装した．シミュレータでは導出した運動方程式をRunge-Kutta法\cite{runge-kutta}により数値積分し運動学を解くことで，2次元剛体2リンクの角度や角速度を計算する．Runge-Kutta法は常微分方程式を解く手法の1つであり，Euler法は$\Delta T$を1桁細かくすると誤差を1桁減少させるのに対し，Runge-Kutta方は誤差を4桁減少させることができる．
 \section{強化学習の設定}
 \subsection{状態}
 状態変数は4つとし，肩関節の角度$\theta_{1}$，角速度$\dot{\theta}_{1}$,肘関節の角度$\theta_{2}$，角速度$\dot{\theta}_{2}$とした．\\
@@ -172,13 +171,13 @@ $M(\theta)$は慣性行列，$h(\theta, \dot{\theta})$はコリオリ力の項�
 \end{eqnarray}
 \equref{2.19}において，$\theta_{v}$，$\theta_{1}$，$\theta_{2}$の単位はdegである．
 また，条件は以下の通りとした．\\
-\begin{flushleft}
-$0$ $\le$ $\theta_{v}$ $\le$ $45$ degのとき，$\frac{\theta_{v}}{45}$\\
-$45$ deg $\le$ $\theta_{v}$ $\le$ $90$ degのとき，$\frac{90-\theta_{v}}{45}$\\
-$90$ deg $\le$ $\theta_{v}$ $\le$ $135$ degのとき，$\frac{\theta_{v}-90}{45}$\\
-$135$ deg $\le$ $\theta_{v}$ $\le$ $180$ degのとき，$\frac{180-\theta_{v}}{45}$\\
-$\theta_{v}$ $\le$ $0$，$180$ $\le$ $\theta_{v}$のとき，$0$\\
-\end{flushleft}
+\begin{itemize}
+  \item $0$ $\le$ $\theta_{v}$ $\le$ $45$ degのとき，$\frac{\theta_{v}}{45}$
+  \item $45$ deg $\le$ $\theta_{v}$ $\le$ $90$ degのとき，$\frac{90-\theta_{v}}{45}$
+  \item $90$ deg $\le$ $\theta_{v}$ $\le$ $135$ degのとき，$\frac{\theta_{v}-90}{45}$
+  \item $135$ deg $\le$ $\theta_{v}$ $\le$ $180$ degのとき，$\frac{180-\theta_{v}}{45}$
+  \item $\theta_{v}$ $\le$ $0$，$180$ $\le$ $\theta_{v}$のとき，$0$\\
+\end{itemize}
 
 この条件により，$\theta_{v}$が$45$ degまたは$135$ degのときに報酬最大となる．これは，投擲物の遠投時に最も有効な角度\cite{angle}である．
 これらの角度からリリース時の角度が離れるにつれて報酬が小さくなっていく．
@@ -235,20 +234,21 @@ $\tau_{1}$は肩関節に与えるトルク，$\tau_{2}$は肘関節に与える
 
 \begin{eqnarray}
   \equlabel{2.26}
-  Reward = \theta_{v} \times v_{2} + CE
+  Reward = \theta_{v} \times v_{2} + scale \times CE
 \end{eqnarray}
 
+$scale$は累積消費エネルギーの値を調整するものである．累積消費エネルギーの値が大きすぎると1ステップごとの報酬が微小になる，あるいはマイナスとなっていくため，初期姿勢のまま動作せずエネルギー消費をしないことを最適として学習する．そのため$scale$によって累積消費エネルギーの大きさを調整する必要があるが，反対に$scale$が大きすぎて累積消費エネルギーが小さくなると疲労を考慮しない投擲フォームが導出されるため，値の調整が重要である．
 \subsection{その他}
 本章では，\equref{Q}における学習率$\alpha$を$0.1$，割引率$\gamma$を$0.9$に設定した．これは将来の報酬を優先的に考慮した学習を期待するためである．
 1タイムステップは$0.005$ sであり，1エピソード内のステップ数は2000，すなわち，$10$ sとした．エピソード数に関しては，学習が収束するまで制限なく行うものとした．
 \section{投擲物の重さに応じた最適投擲フォームの比較}
 \subsection{シミュレーション設定}
-本検証で用いたパラメータを\tabref{4.1}に示す\cite{irving}．身体のサイズは，身長 1.72 m，体重 70 kgの人間の各部位のサイズとした．
+本検証で用いたパラメータを\tabref{4.1}に示す\cite{irving}．$b_{1}$，$b_{2}$は，各関節の粘性係数である．身体のサイズは，身長 1.72 m，体重 70 kgの人間の各部位のサイズとした．
 投擲物は，野球の硬式球と砲丸の重さを参考に，$0.14$ kg\cite{horiuchi} と$7.24$ kg\cite{haq} とした．
 \begin{table}[tb]
-  \tablabel{4.1}
   \begin{center}
-    \caption{Parameters which are used for 2-link simulation}
+    \caption{Parameters which are used for 2D rigid 2 links simulation（0.14 kg vs 7.24 kg）}
+    \tablabel{4.1}
     \begin{tabular}{c|c|c}
       \hline
       Parameters & Unit & Values \\
@@ -308,12 +308,12 @@ $\tau_{1}$は肩関節に与えるトルク，$\tau_{2}$は肘関節に与える
 重さ0.14 kg の投擲物と重さ7.24 kg の投擲物での学習の際に用いるそれぞれの\equref{2.27}から\equref{2.32}の計算結果を\tabref{4.2}に示す．
 
 \begin{table}[tb]
-  \tablabel{4.2}
   \begin{center}
-    \caption{Calculation Results of $l_{g1}$,$l_{g2}$,$I_{1}$,$I_{2}$}
+    \caption{Calculation Results of $l_{g1}$,$l_{g2}$,$I_{1}$,$I_{2}$ for 2D rigid 2 links（0.14 kg vs 7.24 kg）}
+    \tablabel{4.2}
     \begin{tabular}{c|c|c|c}
       \hline
-      Parameters & unit & Values of baseball & Values of cannonball \\
+      Parameters & unit & Values of 0.14 kg & Values of 7.24 kg \\
       \hline
       $l_{g1}$ & m & 0.16 & 0.16 \\
       $l_{g2}$ & m & 0.21 & 0.40 \\
@@ -327,16 +327,16 @@ $\tau_{1}$は肩関節に与えるトルク，$\tau_{2}$は肘関節に与える
 \end{table}
 
 投擲物の重さに応じた投擲フォームの強化学習を行った際の報酬の遷移を\figref{4.2.eps}に示す．重さ0.14 kg の投擲物を遠投する投擲フォームは1250エピソード，重さ7.24 kg の投擲物を遠投する投擲フォームは4000エピソードを採用した．
-\fig{4.2.eps}{width=1.0\hsize}{Reward progress(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
+\fig{4.2.eps}{width=1.0\hsize}{Reward progress for 2D rigid 2 links（left: 0.14 kg thrown object，right: 7.24 kg \newline 　　　　thrown object）}
 
 \subsection{結果・考察}
 $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期状態をいずれも0としたときの投擲物の重さに応じた遠投をするための投擲フォーム戦略の結果・考察を以下に示す．
 \figref{4.3.eps}は強化学習により最適化した，重さ0.14 kg の投擲物を遠投するための投擲フォーム，\figref{4.4.eps}は強化学習により最適化した，重さ7.24 kg の投擲物を遠投するための投擲フォームである．投擲フォームは投擲開始からリリースまでとし，リリース時の姿勢は黒の太枠で囲まれたものである．図中の青リンク，橙リンクがそれぞれ上腕リンク，前腕リンクに対応し，赤先が手先の軌跡を示す．リリース瞬間の肩関節と肘関節の角度，手先速度，投射角を\tabref{4.3}に示す．2つの投擲フォームの比較により，リリース時の肩関節の角度と軌跡の径の大きさに違いが見られた．\\
 
 \begin{table}[tb]
-  \tablabel{4.3}
   \begin{center}
-    \caption{Data at the moment of release（0.14 kg vs 7.24 kg）}
+    \caption{Data at the moment of release for 2D rigid 2 links（0.14 kg vs 7.24 kg）}
+    \tablabel{4.3}
     \begin{tabular}{c|c|c|c}
       \hline
       Parameters & unit & Values of 0.14 kg & Values of 7.24 kg \\
@@ -353,20 +353,20 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
 また，\figref{4.5.eps}は投擲開始からリリースまでの肩関節・肘関節のトルクの推移，\figref{4.6.eps}は投擲開始からリリースまでの肩関節・肘関節の角速度の推移である．\figref{4.5.eps}，\figref{4.6.eps}の左図が重さ0.14 kg の投擲物を遠投するための投擲フォームの各時系列，右図がの重さ7.24 kg の投擲物を遠投するための投擲フォームの各時系列である．\\
 トルクの時系列より，重さ0.14 kg の投擲物を遠投するための投擲フォームは，肩関節と肘関節の運動連鎖を活かした投擲フォーム戦略の傾向がみられた．投擲開始からまず肩関節のトルクによって腕を回転させる．その後，約0.13 s で肩関節のトルクが腕の回転とは逆方向にトルクが生じ，肘関節のトルクが腕の回転と同方向にトルクが生じリリースを迎える．これは肩関節のエネルギーを肘関節に伝達することでより手先方向のエネルギーを大きくしていると考えられる．また，肩関節と肘関節の角速度の推移より，トルクの入力に運動連鎖の傾向が見られる約0.13 s から肩関節の角速度が減少し肘関節の角速度が増加する．リリース時には肩関節と肘関節の角速度が逆転していることから最後は前腕の振りを如何に大きくするのかが重要であると考えられる．一方，重さ7.24 kg の投擲物を遠投するための投擲フォームは，肩関節による影響が大きい投擲フォームの傾向がみられた．投擲開始から肩関節のトルクによって腕を回転させる傾向は重さ0.14 kg の投擲物の際と同様であるが，肩関節のトルクが0となる瞬間が数回生じ，また肘関節のトルクは肘を屈曲させる方向に生じ続けている．これは，肩関節のトルクによる腕の回転はペナルティである累積消費エネルギーへの影響が大きく，消費を抑制するためであると考えられる．また，肘関節のトルクによって肘を屈曲させ続ける傾向にある理由として，モーメントアームを小さくすることで肩の回転に消費するエネルギーを抑制するためであると考えられる．加えて肩関節と肘関節の角速度の推移より，肘関節の角速度が正となるのが遅く，リリースの瞬間も肩関節の角速度が肘関節の角速度より大きい．すなわち，肩関節の影響が重さ0.14 kg の投擲物を遠投する際よりも大きいと考えられる．\\
 
-\fig{4.3.eps}{width=1.0\hsize}{Throwing form from start to release(0.14 kg thrown object)}
-\fig{4.4.eps}{width=1.0\hsize}{Throwing form from start to release(7.24 kg thrown object)}
+\fig{4.3.eps}{width=1.0\hsize}{Throwing form from start to release for 2D rigid 2 links（0.14 kg thrown object）}
+\fig{4.4.eps}{width=1.0\hsize}{Throwing form from start to release for 2D rigid 2 links（7.24 kg thrown object）}
 \clearpage
-\fig{4.5.eps}{width=0.8\hsize}{Transition of shoulder and elbow torque from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
-\fig{4.6.eps}{width=0.8\hsize}{Angular velocity of shoulder and elbow torque from start to release(left: 0.14 kg thrown object，right: 7.24 kg thrown object)}
+\fig{4.5.eps}{width=0.8\hsize}{Transition of shoulder and elbow torque from start to release for 2D rigid 2 links\newline 　　　　（left: 0.14 kg thrown object，right: 7.24 kg thrown object）}
+\fig{4.6.eps}{width=0.8\hsize}{Angular velocity of shoulder and elbow torque from start to release for 2D rigid \newline 　　　　2 links（left: 0.14 kg thrown object，right: 7.24 kg thrown object）}
 
 \section{腕の長さに応じた最適投擲フォームの比較}
 \subsection{シミュレーション設定}
-本検証で用いたパラメータを\tabref{4.3}に示す．身体のサイズは，身長1.72 m または 1.90 m ，体重70 kgの人間の各部位のサイズとした．
+本検証で用いたパラメータを\tabref{4.4}に示す．身体のサイズは，身長1.72 m または 1.90 m ，体重70 kgの人間の各部位のサイズとした．
 投擲物は，野球の硬式球を参考に，0.14 kgとした．
 \begin{table}[tb]
-  \tablabel{4.3}
   \begin{center}
-    \caption{Parameters which are used for 2-link simulation}
+    \caption{Parameters which are used for 2D rigid 2 links simulation（1.72 m vs 1.90 m）}
+    \tablabel{4.4}
     \begin{tabular}{c|c|c}
       \hline
       Parameters & Unit & Values \\
@@ -388,12 +388,12 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
 \end{table}
 
 
-身長1.72 m の人間に基づいた腕の長さでの投擲の際と身長1.90 m の人間に基づいた腕の長さでの投擲の際の，それぞれの\equref{2.27}から\equref{2.32}の計算結果を\tabref{4.4}に示す．重力加速度，可動範囲の端での肩関節と肘関節に加算するトルクは，4.4.1節と同様の設定とした．
+身長1.72 m の人間に基づいた腕の長さでの投擲の際と身長1.90 m の人間に基づいた腕の長さでの投擲の際の，それぞれの\equref{2.27}から\equref{2.32}の計算結果を\tabref{4.5}に示す．重力加速度，可動範囲の端での肩関節と肘関節に加算するトルクは，4.4.1節と同様の設定とした．
 
 \begin{table}[tb]
-  \tablabel{4.4}
   \begin{center}
-    \caption{Calculation Results of $l_{g1}$,$l_{g2}$,$I_{1}$,$I_{2}$}
+    \caption{Calculation Results of $l_{g1}$,$l_{g2}$,$I_{1}$,$I_{2}$ for 2D rigid 2 links（1.72 m vs 1.90 m）}
+    \tablabel{4.5}
     \begin{tabular}{c|c|c|c}
       \hline
       Parameters & unit & Values of 1.72 m & Values of 1.90 m \\
@@ -411,17 +411,16 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
 
 投擲物に応じた投擲フォームの強化学習を行った際の報酬の遷移を\figref{4.4.eps}に示す．身長1.72 m の人間に基づいた腕の長さによる投擲フォームは1250エピソード，身長1.90 m の人間に基づいた腕の長さによる投擲フォームは2070エピソードを採用した．
 
-\fig{4.7.eps}{width=1.0\hsize}{Reward progress(left:1.72 m tall human，right:1.90 m tall human)}
+\fig{4.7.eps}{width=1.0\hsize}{Reward progress for 2D rigid 2 links（left:1.72 m tall human，right:1.90 m tall \newline 　　　　human）}
 
 \subsection{結果・考察}
 $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期状態をいずれも0としたときの腕の長さに応じた遠投をするための投擲フォーム戦略の結果・考察を以下に示す．
-\figref{4.2.eps}は強化学習により最適化した，身長1.72 m の人間に基づいた腕の長さによる投擲フォーム，\figref{4.8.eps}は強化学習により最適化した，身長1.90 m の人間に基づいた腕の長さによる投擲フォームである．投擲フォームは投擲開始からリリースまでとし，リリース時の姿勢は黒の太枠で囲まれたものである．図中の青リンク，橙リンクがそれぞれ上腕リンク，前腕リンクに対応し，赤先が手先の軌跡を示す．リリース瞬間の肩関節と肘関節の角度，手先速度，投射角を\tabref{4.4}に示す．\\2つの投擲フォームの比較により，投擲物の重さによる比較と同様に，リリース時の肩関節の角度と軌跡の径の大きさに違いが見られた．
+\figref{4.2.eps}は強化学習により最適化した，身長1.72 m の人間に基づいた腕の長さによる投擲フォーム，\figref{4.8.eps}は強化学習により最適化した，身長1.90 m の人間に基づいた腕の長さによる投擲フォームである．投擲フォームは投擲開始からリリースまでとし，リリース時の姿勢は黒の太枠で囲まれたものである．図中の青リンク，橙リンクがそれぞれ上腕リンク，前腕リンクに対応し，赤先が手先の軌跡を示す．リリース瞬間の肩関節と肘関節の角度，手先速度，投射角を\tabref{4.6}に示す．\\2つの投擲フォームの比較により，投擲物の重さによる比較と同様に，リリース時の肩関節の角度と軌跡の径の大きさに違いが見られた．
 
 \begin{table}[tb]
-  \tablabel{4.4}
   \begin{center}
-    \caption{Data at the moment of release（1.72 m vs 1.90 m）}
-
+    \caption{Data at the moment of release for 2D rigid 2 links（1.72 m vs 1.90 m）}
+    \tablabel{4.6}
     \begin{tabular}{c|c|c|c}
       \hline
       Parameters & unit & Values of 1.72 m & Values of 1.90 m \\
@@ -438,7 +437,8 @@ $\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期�
 また，\figref{4.9.eps}は投擲開始からリリースまでの肩関節・肘関節のトルクの推移，\figref{4.10.eps}は投擲開始からリリースまでの肩関節・肘関節の角速度の推移である．\figref{4.9.eps}，\figref{4.10.eps}の左図が身長1.72 m の人間に基づいた腕の長さによる投擲フォームの各時系列，右図が身長1.90 m の人間に基づいた腕の長さによる投擲フォームの各時系列である．\\
 トルクの時系列より，身長1.90 m の人間に基づいた腕の長さによる投擲フォームは，身長1.72 m の人間に基づいた腕の長さによる投擲フォームと同様に運動連鎖を活かした投擲フォーム戦略の傾向がみられた．しかし，投擲開始から肩関節のトルクによって腕を回転させる傾向は同じであるが，身長1.90 m の人間に基づいた腕の長さによる投擲フォームは肘関節のトルクを腕の回転方向とは反対の，肘関節を屈曲させる方向へ生じさせている．これはモーメントアームによる影響が考えられる．モーメントアームが大きいと腕の回転に必要な肩関節のトルクが大きくなるが，その分エネルギーを消費する．今回設定したトルクの大きさでは肘を伸ばしたまま腕を回転させるよりも肘を屈曲してモーメントアームを小さくして腕を回転させる方がエネルギー消費が少なく腕を回転させることができると考えられる．また，腕の長さに問わずリリース時には肘関節の角速度が肩関節の角速度を上回ることから，リリース直前に運動連鎖によってより肘関節の角速度を大きくしようとすると考えられる．
 
-\figp{4.8.eps}{width=1.0\hsize}{Throwing form from start to release(0.14 kg thrown object)}
+\figp{4.8.eps}{width=1.0\hsize}{Throwing form from start to release for 2D rigid 2 links（0.14 kg thrown object）}
 \clearpage
-\figh{4.9.eps}{width=0.8\hsize}{Transition of shoulder and elbow torque from start to release(left:1.72 m tall human，right:1.90 m tall human)}
-\figh{4.10.eps}{width=0.8\hsize}{Angular velocity of shoulder and elbow torque from start to release(left:1.72 m tall human，right:1.90 m tall human)}
+\figp{4.9.eps}{width=0.8\hsize}{Transition of shoulder and elbow torque from start to release for 2D rigid 2 links\newline 　　　　（left:1.72 m tall human，right:1.90 m tall human）}
+\figp{4.10.eps}{width=0.8\hsize}{Angular velocity of shoulder and elbow torque from start to release for \newline 　　　　　2D rigid 2 links（left:1.72 m tall human，right:1.90 m tall human）}
+
