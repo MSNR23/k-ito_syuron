@@ -3,8 +3,11 @@
 \def\Hline{\noalign{\hrule height .9pt}}
 \def\smallhline{\noalign{\hrule height .1pt}}
 
-\newcommand{\figref}[1]{{図\ref{fig:#1}}}
-\newcommand{\tabref}[1]{{表\ref{tab:#1}}~}
+\newcommand{\figref}[1]{{Fig \ref{fig:#1}}}
+\newcommand{\figrefp}[1]{{Fig \ref{figp:#1}}}
+\newcommand{\figrefh}[1]{{Fig \ref{figh:#1}}}
+\newcommand{\figreft}[1]{{Fig \ref{figt:#1}}}
+\newcommand{\tabref}[1]{{Table \ref{tab:#1}}}
 \newcommand{\equref}[1]{{式(\ref{equ:#1})}}
 
 \newcommand{\chapref}[1]{第{\bf\ref{chap:#1}}章}
@@ -38,7 +41,43 @@
 
 
 \newcommand{\fig}[3]{%
- \begin{figure}[tbp]%
+ \begin{figure}[htbp]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \vspacebeforefig
+   \caption{#3}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\figp}[3]{%
+ \begin{figure}[p]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \vspacebeforefig
+   \caption{#3}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\figh}[3]{%
+ \begin{figure}[h]%
+  \begin{center}%
+   \pastefig{\FIGDIR/#1}{#2}%
+   \vspacebeforefig
+   \caption{#3}%
+   \figlabel{#1}%
+   \vspaceafterfig
+  \end{center}%
+ \end{figure}%
+}
+
+\newcommand{\figt}[3]{%
+ \begin{figure}[t]%
   \begin{center}%
    \pastefig{\FIGDIR/#1}{#2}%
    \vspacebeforefig
