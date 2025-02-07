@@ -21,6 +21,16 @@
 \newcommand{\FIGDIR}{./fig}        %図を置くディレクトリを指定する
 \usepackage{otf}
 
+
+%追加　minipage使用に必要
+%確か，minipage用
+\usepackage[hang,small,bf]{caption}
+% \usepackage[subrefformat=parens]{subcaption}
+% \captionsetup{compatibility=false}
+% %subcaptionの(a)を付けたままrefする
+% \captionsetup[subfigure]{labelformat=simple}
+% \renewcommand{\thesubfigure}{(\alph{subfigure})}
+
 \date{令和6年度修士論文}
 \title{投擲物の重さや身体のパラメータに応じた\\投擲フォーム戦略の研究}
 \author{指導教員　水内　郁夫　教授 \\
@@ -48,7 +58,7 @@
 
 \addcontentsline{toc}{chapter}{謝辞}
 \markboth{謝辞}{謝辞}
-% \include{thanks}
+\include{thanks}
 
 \addcontentsline{toc}{chapter}{参考文献}
 \markboth{参考文献}{参考文献}
