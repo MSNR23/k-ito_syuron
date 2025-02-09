@@ -1,18 +1,20 @@
 \input{tuat-common.tex}
 
-\secret{b}{0mm}                 %学外秘/専攻外秘の設定．学部はb（学外秘），修士はm（専攻外秘）にする．
+\secret{m}{160mm}                 %学外秘/専攻外秘の設定．学部はb（学外秘），修士はm（専攻外秘）にする．
                                 %第2引数は位置の調整用．-側に大きくすれば左に寄る．+側に大きくすれば右に寄る．
-\pagenum{1-9}%ページ番号 プログラムが確定したら修正を！
+% \pagenum{1-9}%ページ番号 プログラムが確定したら修正を！
 
 \newcommand{\FIGDIR}{./fig}	%図を置くディレクトリを指定する
 				%Makefileとは連動していないので注意
 \usepackage{pxjahyper} %% これを入れるとしおりが文字化けしない。out2uniが不要になる。
 \usepackage{ikuo}%%便利コマンド集．
+\usepackage{otf}
+\usepackage[hang,small,bf]{caption}
 
 \begin{document}
 \twocolumn[%
-\title{ほげの解析とほげ発生装置の開発}{Analysis of Hoge and Development of Hoge Generation Device}
-\author{水内研究室}{本堂 貴敏}{Takatoshi HONDO}
+\title{　\\投擲物の重さや身体のパラメータに応じた投擲フォーム戦略の研究}{Research on Throwing Form Strategies\\according toWeight of the Thrown Objects or Body Parameters}
+\author{博士前期課程2年　伊藤浩平}{指導教員　水内郁夫　教授}{}
 \begin{abstract}
 This paper describes analysis of hoge and the hoge generator.  In previous researches, it was said that hoge is hoge.  In this research, we propose the idea ``hoge is not hoge''.  Based on this idea, we introduced the theory named ``The Second Law of Hoge'' and developed the hoge generator.  We confirmed the effect of the generator by simulations and experiments.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  This is a pen.  
 \end{abstract}
@@ -21,76 +23,446 @@ This paper describes analysis of hoge and the hoge generator.  In previous resea
 \begin{small}
 
 \section{緒言}
-我々は宇宙人\cite{Hondo:hohoge2006}だ．地球を征服しに来た．
+投擲動作を行うスポーツは数多く存在するが，野球と砲丸投げのように競技によって投擲フォームは異なり，さらに同一競技内であっても個人によって投擲フォームは異なる．競技や個人によって投擲フォームが異なる要因として，投擲物や身体といった投擲フォームに関連するパラメータの違いが挙げられる．
+具体的なパラメータとして，投擲物は重さや大きさ，身体は慣性や各部位のサイズ等がある．これまで投擲フォームに関する研究例として，眞田の野球におけるオーバーハンドスローとサイドハンドスローの球速の比較\cite{sanada}，大室らの野球における足の踏み出し幅による投球速度の比較\cite{omuro}，黒松らの砲丸投げグライド投法における投擲フォーム改善前後の飛距離の比較\cite{kuromatsu}などがある．
+投擲フォームは球速や投擲物の飛距離等の，スポーツにおける総合性能に大きな影響を及ぼす．また，投擲に関する総合性能の研究例として，蔭山らの野球における体格や背筋力と投球速度の関係\cite{kageyama}，\UTF{9AD9}橋らの野球における肩関節と股関節の可動域・筋力と投球速度の関係\cite{takahashi}，坪井らの砲丸投げにおける投射速度・投射角と飛距離の関係\cite{tsuboi}などがある．スポーツにおいて総合性能向上は最も重要な要素の一つである．これらの研究はある一つの競技に特定した研究である．しかし，さまざまな投擲フォームがどのような戦略の基で成立しているのかに関する汎用的な理論は確立されていない．そこで，本研究ではシミュレーションにおいてさまざまなパラメータに応じた投擲フォームを導出・比較することで，さまざまな投擲フォームの戦略を検討・考察・議論することを目的とする．\\
 
-\section{ほげ}
-ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
-げほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
-ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
-げほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
-ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
-げほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
-ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
-げほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
-ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
-げほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
-ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
-げほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
-ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
-げほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげ
-ほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほげほ
-
-\subsection{うげ}
-うげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげう
-げうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげ
-うげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげう
-げうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげ
-うげほげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげう
-げうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげ
-うげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげう
-げうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげ
-うげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげう
-げうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげ
-うげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげう
-げうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげ
-うげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげう
-げうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげ
-うげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげうげう
-
-上のパラグラフにおけるほげの個数は$1$に等しい．
-
-%% \clearpage
-
-\section{ほげの第2法則の導出}
-
-\fig{fig1.eps}{width=.9\hsize}{The concept of hoge}
-
-\doublefig{photo.jpg}{width=.45\hsize}{fig1.eps}{width=.45\hsize}
-{\baselineskip=9pt The very very very very very very very very very very very very very
-very very very very very very very very very very very very very very
-very very long caption is here.}
-
-\figref{fig1.eps}に穂下の概念図を示す．
-\figref{photo.jpg}はNAOである．
-これに基づき，ほげの原理は次式で与えられる\cite{hooogeBook}．
-
+\section{強化学習を用いた投擲フォーム導出}
+投擲フォームの導出方法について，本研究では強化学習による最適化手法を採用した．\\
+　投擲フォームは競技・個人によって異なる．また，多くの要素が同時に影響する複雑な動作であり，時々刻々と全身の運動連鎖\cite{iwasako}\cite{burkhart}によるダイナミクスが変化するため，明示的な解を求めることは困難である．運動連鎖とは，ある関節の動作が隣接する関節に影響を与え，運動エネルギーを伝達していく運動効果である．強化学習は複雑なモデルや学習プロセスにより最適化までに時間的計算コスト等はかかるが，明示的な解がなく詳細なパラメータ設定が求められる投擲フォーム導出において有効な手段である．
+\subsection{強化学習}
+強化学習\cite{rl1}\cite{rl2}とは，環境を観測しながらエージェントが試行錯誤することで，獲得する方策を最適化する機械学習の手法である．
+方策とは，環境に対してエージェントがどのような行動を選択すべきかを決定する部分である．
+強化学習の流れの概略図について，\figref{2.1.jpg}に示す．
+\fig{2.1.jpg}{width=0.8\hsize}{Reinforcement Learning mechanism}
+エージェントが環境に対して行動を選択し，実行する．環境はその行動に対しエージェントに状態と報酬をフィードバックする．
+その後，エージェントは受け取った状態から報酬がより大きくなるような行動を選択する．\\
+　この学習を繰り返すことでエージェントは行動を改善し，最適な行動を見つけることができる．
+\subsection{強化学習手法}
+本研究では，強化学習の手法の1つであるQ学習\cite{watkins}を採用する．Q学習とは，ある状態における，ある行動の価値をQ値と呼ばれる価値関数を用いて表す．
+このQ値は短期的な報酬でなく，より報酬の高い状態へと遷移できるかを見据え，行動の長期的な価値を示すものである．\\
+　Q学習において，Q値は\equref{Q}で更新する．
 \begin{eqnarray}
-\equlabel{hoge1}
-y_1 & = & {x_1}^2 + 3x_1x_2 - 5{x_2}^2 \\
-\equlabel{hoge2}
-y_2 & = & (x_1 + z_2)^2
+  \equlabel{Q}
+  Q(s,a)=(1-\alpha)Q(s,a)+\alpha(r+\gamma \mathrm{max}Q(s',a'))
 \end{eqnarray}
 
+\equref{Q}において，$\alpha$は学習率，$\gamma$は割引率であり，範囲はそれぞれ0$\leq$$\alpha$$\leq$1，0$\leq$$\gamma$$\leq$1である．また，$Q(s,a)$は状態が$s$における行動$a$の行動価値関数である．学習率はQ値の更新の大きさを決定するパラメータであり，\equref{Q}におけるQ値の更新量であるTD誤差$\alpha(r+\gamma \mathrm{max}Q(s',a'))$に影響する．学習率が極端に大きすぎるとQ値の更新が過剰となるため学習が発散する．一方，学習率が極端に小さすぎると学習の収束が遅くなり，局所的な最適解にとどまる可能性がある．そのため，Q学習において最適な学習率を設定することが重要である．割引率は将来の価値をどれだけ割り引くのかを決定するパラメータである．割引率が大きいほど長期的な報酬を重要視するため学習の収束に時間を要する．一方，割引率が小さいほど短期的な報酬を重要視するため，最適解に収束しない可能性がある．そのため，学習率と同様に最適な割引率を設定することが重要である．
+\subsection{行動選択方法}
+本研究では，行動選択方法として$\varepsilon$-greedy法\cite{greedy}を採用した．$\varepsilon$-greedy法とは，探索と活用のトレードオフを管理するための一般的な強化学習の手法である．
+$\varepsilon$-greedy法では，$\varepsilon$（0$\leq$$\varepsilon$$\leq$1）の確率で全ての行動からランダムに行動を選択し，1-$\varepsilon$の確率でルールの価値が最も高い行動を選択する．
+学習が進んでも$\varepsilon$が大きいと，無駄な探索が増加し学習効率が低下する．そのため，学習が進むにつれて$\varepsilon$を0に近づけることで，より学習したルールの価値に基づいた行動が選択できる．
+\section{剛体1リンクによるリンク速度最適化シミュレーション}
+本研究では自作したシミュレータを用いて投擲フォームを導出し，戦略を考察したが，検討に先立ち剛体1リンクモデルでのリンク速度最適化シミュレーションを行い，シミュレータと手法の妥当性について検証した．
+\subsection{動力学モデル}
+本章の検証で用いた動力学モデルである剛体１リンクを\figref{3.5.eps}に示す．$l$はリンク長さ、$l_g{1}$はリンクの重心までの長さ、$m$はリンク重さ、$I$は重心周りの慣性モーメント、$\tau$は関節にかかるトルク、$\theta$はリンク角度、$g$は重力加速度である。
+\figt{3.5.eps}{width=0.8\hsize}{Rigid 1 Link}
+\begin{table}[tb]
+  \begin{center}
+    \caption{Rigid 1 link parameters}
+    \tablabel{3.1}
+    \begin{tabular}{c|c|c}
+      \hline
+      Parameters & Unit & Values \\
+      \hline
+      $m$ & kg & 1.0 or 5.0 or 10.0\\
+      $l$ & m & 1.00 \\
+      $b$ &  & 0.01 \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+ラグランジュの方法\cite{lagrange}を用いて導いた剛体1リンクの運動方程式は，次の通りである．\\
 \begin{eqnarray}
-\equlabel{hoge3}
-y & = & x^2 + 2xz + z^2 \nonumber\\
-  & = & (x + z)^2
+  \equlabel{3.9}
+  M\ddot{\theta} + g(\theta) + b(\dot{\theta}) = \tau
 \end{eqnarray}
 
-\fig{photo2.jpg}{width=.7\hsize}{The ray of hoge}
+% このとき，
 
-\equref{hoge1}および\equref{hoge2}より\equref{hoge3}を
-導出することが，ほげすなわち$y=e^{-\alpha x}$である(\figref{photo2.jpg})．
+% \begin{eqnarray}
+%   M = I + m{l_{g}}^2
+% \end{eqnarray}
+
+% \begin{eqnarray}
+%   g(\theta) = mgl_{g}\cos\theta
+% \end{eqnarray}
+
+% \begin{eqnarray}
+%   b(\dot{\theta}) = b\dot{\theta}
+% \end{eqnarray}
+
+$M$は慣性項，$g(\theta)$は重力項，$b(\dot{\theta})$は粘性項である．
+
+\subsection{シミュレータの作成}
+剛体1リンクを強化学習するためのシミュレータをpythonで実装した．シミュレータでは導出した運動方程式をEuler法\cite{euler}により数値積分し運動学を解くことで，剛体1リンクの角度や角速度を計算した．Euler法は常微分方程式を解く手法の1つである．
+Euler法の時間ステップは0.001 s とした．また，各エピソードごとに出力した時系列データを基に，pythonライブラリのmatplotlibによりリンク挙動をアニメーション表示するコードを作成した．
+\figt{3.4.eps}{width=1.0\hsize}{Reward progress in Rigid 1 Link（1.0 kg，5.0 kg，10.0 kg）}
+\figt{3.3.eps}{width=0.6\hsize}{Transition in angular velocity of Rigid 1 Link（1.0 kg，5.0 kg，10.0 kg）}
+\subsection{強化学習の設定}
+本章の強化学習を行うにあたって，状態，行動，報酬，その他を設定した．\\
+状態について、Q学習はQ値をQテーブルと呼ばれる状態と行動で表される表に格納するため，連続値を離散化する必要がある．
+状態変数は2つとし，リンクの角度$\theta$と角速度$\dot{\theta}$である．
+角度の範囲は$-180$ deg $\leq \theta \leq$ $180$ deg，角速度の範囲は$-2.0$ m/s $\leq \dot{\theta} \leq$ $2.0$ m/sとした．
+また，分割数は各状態4分割であり，全ての状態を$4^{2}$=16通りで表すことができる．
+行動は，全3通りに設定した．回転ジョイントにかかるトルクの選択肢を$-5.0$ N$\cdot$m，$0$，$+5.0$ N$\cdot$mとし，いずれかを$\epsilon$-greedy法に基づき選択した．
+報酬の設計について，\equref{3.15}に示す．リンクの角速度を報酬とすることで，リンクの角速度を大きくする設定とした．
+\begin{eqnarray}
+  \equlabel{3.15}
+  reward = \dot{\theta}
+\end{eqnarray}
+その他の設定について，学習率$\alpha$=0.1，割引率$\gamma$=0.9とした．$\epsilon$は\equref{3.16}であり，エピソードが進むにつれてランダム値を選択する確率を小さくする設定とした．
+\begin{eqnarray}
+  \equlabel{3.16}
+  \epsilon = 0.3 \times 0.99^{(\mathrm{episode} + 1)}
+\end{eqnarray}
+また，エピソード数を1000，時間ステップ$dt$を0.01，1エピソードあたりのステップ数を3000とし，30 s 間の剛体1リンクのリンク速度最適化シミュレーションを行った．
+\subsection{リンク速度最適化シミュレーション}
+パラメータの設定について，\tabref{3.1}に示す．$b$は粘性係数である．
+% \begin{table}[t]
+%   \begin{center}
+%     \caption{Rigid 1 link parameters}
+%     \tablabel{3.1}
+%     \begin{tabular}{c|c|c}
+%       \hline
+%       Parameters & Unit & Values \\
+%       \hline
+%       $m$ & kg & 1.0 or 5.0 or 10.0\\
+%       $l$ & m & 1.00 \\
+%       $b$ &  & 0.01 \\
+%       \hline
+%     \end{tabular}
+%   \end{center}
+% \end{table}
+リンクの重さは，1.0 kg，5.0 kg，10.0 kg の3種類とした．
+\subsection{結果・考察}
+初期条件は，$\theta$ = $-90$ deg ，$\dot{\theta}$ = 0 とした際の，リンク重さに応じたリンク速度最適化シミュレーションを行った結果について述べる．\figref{3.4.eps}はリンク重さ1.0 kg，5.0 kg，10.0 kg の際の報酬の遷移である．また，\figref{3.3.eps}はそれぞれのリンク重さの際の30 s 間のリンク速度の時系列を比較したグラフである．比較の結果，リンク重さによってリンク速度の推移に違いがみられた．特に，$m$=10.0 kg の際にトルクの入力は30秒間 $+ 5$ N$\cdot$m が選択され続けていたが，振動開始直後にややリンク速度が負となる瞬間がある．これはトルク不足の影響が考えられる．リンクを回転させる際，最もトルクが必要な姿勢はリンクを垂直下向きの位置から振り上げるタイミングである．本検証は剛体1リンクで自由度が1のため，他のリンクや関節による干渉を受けずリンクが回転し続けた．リンクや自由度が多くなると，他のリンクや関節による影響でリンク挙動に違いが生じると考えられる．\\
+　本検証により，自作したシミュレータと手法の有用性を確認した．次章以降では，腕に見立てた剛体2リンクを動力学モデルとし，投擲フォームの導出・比較，戦略の考察を行う．
+
+\section{2次元剛体2リンクによるパラメータに応じた投擲フォームの導出・比較と戦略の考察}
+本章では，2次元モデルによる投擲物の重さに応じた遠投をするための投擲フォームの導出・比較により，考察した投擲フォーム戦略について述べる．同様に腕の長さに応じた遠投をするための投擲フォームの比較により，考察した投擲フォーム戦略について述べる．
+\subsection{動力学モデル}
+本章の検証で用いた動力学モデルを\figref{4.0.eps}に示す．人間の腕を肩関節1自由度と肘関節1自由度の計2自由度から構成される2次元剛体2リンクとしてモデル化した．$l_{1}$は上腕リンク長さ、$l_{2}$は前腕リンク長さ、$l_g{1}$は上腕リンクの重心までの長さ、$l_g{2}$は前腕リンクの重心までの長さ、$m_{1}$は上腕リンク重さ、$m_{2}$は前腕リンク重さ、$I_{1}$は上腕リンクの重心周りの慣性モーメント、$I_{2}$は前腕リンクの重心周りの慣性モーメント、$\tau_{1}$は肩関節にかかるトルク、$\tau_{2}$は肘関節にかかるトルク、$\theta_{1}$は上腕リンク角度、$\theta_{2}$は前腕リンク角度である。また、重力加速度は$g$である。ラグランジュの方法を用いて導いた2次元剛体2リンクの運動方程式は，次の通りである．
+\figt{4.0.eps}{width=0.8\hsize}{2D Rigid 2 Links}
+\begin{eqnarray}
+  M(\theta)\ddot{\theta} + h(\theta, \dot{\theta}) + g(\theta) + b(\dot{\theta}) = \tau
+\end{eqnarray}
+このとき，$\theta$=${[\theta_{1} \quad \theta_{2}]}^T$，$\tau$=${[\tau_{1} \quad \tau_{2}]}^T$である。
+
+\begin{eqnarray}
+  M(\theta)= 
+              \begin{bmatrix}
+                M_{11} & M_{12} \\
+                M_{21} & M_{22}
+              \end{bmatrix}
+\end{eqnarray}
+
+% \begin{eqnarray}
+%   M_{11}= 
+%             &&m_{1}{l_{g1}}^2 + I_{1} \nonumber \\
+%             &+& m_{2}({l_{1}}^2 + {l_{g2}}^2 + 2l_{2}l_{g2}\cos\theta_{2}) + I_{2} \nonumber
+% \end{eqnarray}
+% \begin{eqnarray}
+%   M_{12}= 
+%   m_{2}({l_{g2}}^2 + l_{1}l_{g2}\cos\theta_{2}) + I_{2}\nonumber
+% \end{eqnarray}
+% \begin{eqnarray}
+%   M_{21}= 
+%   m_{2}({l_{g2}}^2 + l_{1}l_{g2}\cos\theta_{2}) + I_{2}\nonumber
+% \end{eqnarray}
+% \begin{eqnarray}
+%   M_{22}= 
+%   m_{2}{l_{g2}}^2 + I_{2}\nonumber
+% \end{eqnarray}
+\begin{eqnarray}
+  h(\theta, \dot{\theta})=
+            \begin{bmatrix}
+              h_{11} \\
+              h_{21}
+            \end{bmatrix}
+\end{eqnarray}
+% \begin{eqnarray}
+%   h_{11}=
+%   -m_{2}l_{1}l_{g2}\sin\theta_{2}(2\dot{\theta_{1}}\dot{\theta_{2}} + {\dot{\theta_{2}}}^2)\nonumber
+% \end{eqnarray}
+% \begin{eqnarray}
+%   h_{21}=
+%   m_{2}l_{1}l_{g2}\sin\theta_{2}\cdot{\dot{\theta_{1}}}^2\nonumber
+% \end{eqnarray}
+\begin{eqnarray}
+  g(\theta)=
+  \begin{bmatrix}
+    g_{11} \\
+    g_{21}
+  \end{bmatrix}
+\end{eqnarray}
+% \begin{eqnarray}
+%   g_{11}=
+%             &&m_{1}gl_{g1}\cos\theta_{1} \nonumber \\
+%             &+& m_{2}g(l_{1}\cos\theta_{1} + l_{g2}\cos(\theta_{1} + \theta_{2}))\nonumber
+% \end{eqnarray}
+% \begin{eqnarray}
+%   g_{21}=
+%   m_{2}gl_{g2}\cos(\theta_{1} + \theta_{2})\nonumber
+% \end{eqnarray}
+\begin{eqnarray}
+  b(\dot{\theta})=
+            \begin{bmatrix}
+              b_{11} \\
+              b_{21}
+            \end{bmatrix}
+\end{eqnarray}
+% \begin{eqnarray}
+%   b(\dot{\theta})=
+%             \begin{bmatrix}
+%               b_{1}\dot{\theta_{1}} \\
+%               b_{2}\dot{\theta_{2}}
+%             \end{bmatrix}
+% \end{eqnarray}
+
+$M(\theta)$は慣性行列，$h(\theta, \dot{\theta})$はコリオリ力の項，$g(\theta)$は重力項，$b(\dot{\theta})$は粘性項である．
+
+\subsection{シミュレータの作成}
+2次元剛体2リンクを強化学習するためのシミュレータをpythonで実装した．シミュレータでは導出した運動方程式をRunge-Kutta法\cite{runge-kutta}により数値積分し運動学を解くことで，2次元剛体2リンクの角度や角速度を計算する．Runge-Kutta法は常微分方程式を解く手法の1つであり，Euler法は時間幅$\Delta T$を1桁細かくすると誤差を1桁減少させるのに対し，Runge-Kutta方は誤差を4桁減少させることができる．
+\subsection{強化学習の設定}
+状態について、状態変数は4つとし，肩関節の角度$\theta_{1}$，角速度$\dot{\theta}_{1}$，肘関節の角度$\theta_{2}$，角速度$\dot{\theta}_{2}$とした．\\
+各関節の角度の可動範囲は，$-180$ deg $\le$ $\theta_{1}$ $\le$ $180$ deg，$0$ $\le$ $\theta_{2}$ $\le$ $150$ deg\cite{range}とした．
+肩関節は本来3自由度でありピッチ軸周りの可動範囲は設定した可動範囲より小さい．しかし，ロール軸，ヨー軸の可動範囲の影響により肩がピッチ軸周りに$360$ deg 回転しているように見える．よって，本章は2次元でのシミュレーションのため，上記の可動範囲とした．
+また，各リンクの角速度については，$-10.0$ m/s $\le$ $\dot{\theta}_{1}$ $\le$ $10.0$ m/s，$-10.0$ m/s $\le$ $\dot{\theta}_{2}$ $\le$ $10.0$ m/sとした．
+分割数は各状態4分割であり，全ての状態を$4^{4}$=256通りで表すことができる．\\
+行動は，全9通りに設定した．肩関節にかかるトルクを正，0，負の3通り，同様に肘関節にかかるトルクも正，0，負の3通りとした．
+これにより，Qテーブルは$256 \times 9=2304$通りで表すことができる．\\
+報酬は，リリース時の投射角度$\theta_{v}$と手先速度$v_{2}$の2つの要素から設定した．リリースの投射角度$\theta_{v}$について，\equref{2.19}で計算し、条件により$\theta_{v}$が$45$ degまたは$135$ degの際に報酬最大となるよう設定した\cite{angle}。
+\begin{eqnarray}
+  \equlabel{2.19}
+  \theta_{v}=\theta_{1}+\theta_{2}-90
+\end{eqnarray}
+\equref{2.19}において，$\theta_{v}$，$\theta_{1}$，$\theta_{2}$の単位はdegである．\\
+　手先速度$v_{2}$について、\equref{2.22}で計算した。
+% \begin{eqnarray}
+%   \equlabel{2.20}
+%   {v_{x2}}^2=-l_{1}\sin\theta_{1}\cdot\dot{\theta}_{1}-l_2\sin(\theta_{1}+\theta_{2})\cdot(\dot{\theta}_{1}+\dot{\theta}_{2})
+% \end{eqnarray}
+% \begin{eqnarray}
+%   \equlabel{2.21}
+%   {v_{y2}}^2=-l_{1}\cos\theta_{1}\cdot\dot{\theta}_{1}+l_2\cos(\theta_{1}+\theta_{2})\cdot(\dot{\theta}_{1}+\dot{\theta}_{2})
+% \end{eqnarray}
+% \equref{2.20}，\equref{2.21}より，
+\begin{eqnarray}
+  \equlabel{2.22}
+  v_{2}=\sqrt{{v_{x2}}^2+{v_{y2}}^2}
+\end{eqnarray}
+以上の2つの要素より，報酬は$\theta_{v} \times v_{2}$と設定した．この設定により，遠投を行うための投擲フォームを獲得することができる．また，リリース時の投射角と手先速度の積とすることで，どちらの要素にも報酬に対する重みを付与することができる．\\
+　さらに疲労を考慮した効率的な投擲フォームを獲得するために，罰則として累積消費エネルギーを採用した。各関節ごとの累積消費エネルギーを\equref{2.24}で計算し、その合計を全体の累積消費エネルギー$CE$とした．\equref{2.24}において、$\tau$は各関節に与えるトルクである．
+\begin{eqnarray}
+  \equlabel{2.23}
+  CE_{j}&=&\int \tau_{j}(t)\cdot\dot{\theta}_{j} dt \nonumber \\
+        &\approx&|\tau_{j}(t)\cdot\dot{\theta}_{j}|\cdot\Delta t \quad(j = 1,2)
+\end{eqnarray}
+% \begin{eqnarray}
+%   \equlabel{2.24}
+%   CE_{2}&=&\int \tau_{2}(t)\cdot\dot{\theta}_{2} dt \nonumber \\
+%         &\approx&|\tau_{2}(t)\cdot\dot{\theta}_{2}|\cdot\Delta t
+% \end{eqnarray}
+% \equref{2.23}，\equref{2.24}より，
+% \begin{eqnarray}
+%   \equlabel{2.25}
+%   CE = CE_{1} + CE_{2}
+% \end{eqnarray}
+以上をふまえ、報酬の設計を\equref{2.26}に示す。
+\begin{eqnarray}
+  \equlabel{2.26}
+  Reward = \theta_{v} \times v_{2} - scale \times CE
+\end{eqnarray}
+である．
+$scale$は累積消費エネルギーの値を調整するものである．累積消費エネルギーの値が大きすぎると1ステップごとの報酬が微小となる，あるいはマイナスとなっていくため，初期姿勢のまま動作せずエネルギー消費をしないことを最適として学習する．そのため$scale$によって累積消費エネルギーの大きさを調整する必要があるが，反対に$scale$が大きすぎて累積消費エネルギーが小さくなると疲労を考慮しない投擲フォームが導出されるため，値の調整が重要である．その他の設定について，\equref{Q}における学習率$\alpha$を$0.1$，割引率$\gamma$を$0.9$に設定した．1タイムステップは$0.005$ sであり，1エピソード内のステップ数は2000，すなわち，$10$ sとした．エピソード数に関しては，学習が収束するまで際限なく行うものとした．
+\subsection{投擲物の重さに応じた最適投擲フォームの比較}
+本検証で用いたパラメータを\tabref{4.1}に示す\cite{irving}．$b_{1}$，$b_{2}$は，各関節の粘性係数である．身体のサイズは，身長 1.72 m，体重 70 kgの人間の各部位のサイズとした．
+投擲物は，野球の硬式球と砲丸の重さを参考に，$0.14$ kg\cite{horiuchi} と$7.24$ kg\cite{haq} とした．
+\begin{table}[tb]
+  \begin{center}
+    \caption{Parameters which are used for 2D Rigid 2 Links simulation（0.14 kg vs 7.24 kg）}
+    \tablabel{4.1}
+    \begin{tabular}{c|c|c}
+      \hline
+      Parameters & Unit & Values \\
+      \hline
+      $l_{1}$ & m & 0.32 \\
+      $l_{2}$ & m & 0.44 \\
+      $l_{f}$ & m & 0.25 \\
+      $l_{h}$ & m & 0.19 \\
+      $m_{f}$ & kg & 1.12 \\
+      $m_{h}$ & kg & 0.42 \\
+      $m_{o}$ & kg & 0.14 or 7.24 \\
+      $m_{1}$ & kg & 1.96 \\
+      $m_{2}$ & kg & 1.68 or 8.78 \\
+      $b_{1}$ &  & 0.05 \\
+      $b_{2}$ &  & 0.01 \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+重力加速度$g$を9.8 $\mathrm{m/s^{2}}$とする．また，本検証では前腕と手と投擲物の要素を合わせて前腕リンクとしてみなすため，3つの要素を考慮して設定を行った．
+前腕の要素として，$l_{f}$を前腕長さ，$m_{f}$を前腕重さ，$l_{h}$を手長さ，$m_{h}$を手重さとした．\\
+% 上腕リンクの重心までの長さ$l_{g1}$，前腕リンクの重心までの長さ$l_{g2}$を，\equref{2.27}，\equref{2.28}により計算した．
+% \begin{eqnarray}
+%   \equlabel{2.27}
+%   l_{g1}=\frac{1}{2}l_{1}
+% \end{eqnarray}
+
+% \begin{eqnarray}
+%   \equlabel{2.28}
+%   l_{g2}=\frac{\frac{1}{2}m_{f}l_{f}+m_{h}(l_{f}+\frac{1}{2}l_{h}+m_{o}l_{2})}{m_{2}}
+% \end{eqnarray}
+
+% 上腕リンクの慣性モーメント$I_{1}$と前腕リンクの慣性モーメント$I_{2}$を\equref{2.29}，\equref{2.30}により計算した．
+% \begin{eqnarray}
+%   \equlabel{2.29}
+%   I_{1}=\frac{1}{12}m_{1}{l_{1}}^{2}
+% \end{eqnarray}
+% \begin{eqnarray}
+%   \equlabel{2.30}
+%   I_{2}=\frac{1}{12}m_{f}{l_{f}}^{2}+m_{f}{l_{g1}}^{2}+\frac{1}{12}m_{h}{l_{h}}^{2}+m_{h}{l_{g2}}^{2}+m_{o}{l_{2}}^{2}
+% \end{eqnarray}
+
+% 各ステップで与えるトルクについて，肩関節に与えるトルク$\tau_{1}$を\equref{2.31}，肘関節に与えるトルク$\tau_{2}$を\equref{2.32}を基に計算した．
+
+% \begin{eqnarray}
+%   \equlabel{2.31}
+%   \tau_{1} = \tau_{2} + m_{1}gl_{1}\cos(\theta_{1} + \theta_{2})
+% \end{eqnarray}
+
+% \begin{eqnarray}
+%   \equlabel{2.32}
+%   \tau_{2} = (m_{2} + m_{o})gl_{2}\cos(\theta_{1} + \theta_{2})
+% \end{eqnarray}
+
+% 腕を360 deg 回転させる際，重力の影響で$\theta_{1}$，$\theta_{2}$が0から90 deg に振り上げる際に最もトルクが必要である．そのため，$\theta_{1}$ = $\theta_{2}$ = 0の際に各関節にかかるトルクを計算し，その計算結果を基に計算した．また，肘関節の可動範囲は0 $\le$ $\theta_{2}$ $\le$ 150 deg であるが，可動範囲の端である$\theta_{2} = 0$ または $\theta_{2} = 150$ degでは，可動範囲内に戻ろうとする力がはたらく．これを考慮し，可動範囲の端では肘関節が可動範囲内に戻る方向に20 N$\cdot$m のトルクを加算する設定とした．
+重さ0.14 kg の投擲物と重さ7.24 kg の投擲物での学習の際に用いる各リンクの重心までの長さ、慣性モーメント、各関節にかかるトルクを\tabref{4.2}に示す．肘関節のトルクの設定において、肘関節の可動範囲は0 $\le$ $\theta_{2}$ $\le$ 150 deg であるが，可動範囲の端である$\theta_{2} = 0$ または $\theta_{2} = 150$ degでは，可動範囲内に戻ろうとする力がはたらく．これを考慮し，可動範囲の端では肘関節が可動範囲内に戻る方向に20 N$\cdot$m のトルクを加算する設定とした．
+\begin{table}[tb]
+  \begin{center}
+    \caption{Calculation results of $l_{g1}$,$l_{g2}$,$I_{1}$,$I_{2}$ for 2D Rigid 2 Links（0.14 kg vs 7.24 kg）}
+    \tablabel{4.2}
+    \begin{tabular}{c|c|c|c}
+      \hline
+      Parameters & Unit & Values of 0.14 kg & Values of 7.24 kg \\
+      \hline
+      $l_{g1}$ & m & 0.16 & 0.16 \\
+      $l_{g2}$ & m & 0.21 & 0.40 \\
+      $I_{1}$ & kg$\cdot$$\mathrm{m}^2$ & 0.017 & 0.017 \\
+      $I_{2}$ & kg$\cdot$$\mathrm{m}^2$ & 0.15 & 1.59 \\
+      $\tau_{1}$ & N$\cdot$m & $-16, 0, +16$ & $-47, 0, +47 $\\
+      $\tau_{2}$ & N$\cdot$m & $-10, 0, +10$ & $-41, 0, +41 $\\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+以上の設定により，投擲物の重さに応じた遠投をするための投擲フォームの強化学習を行った際の報酬の遷移を\figref{4.2.eps}に示す．重さ0.14 kg の投擲物を遠投するための投擲フォームは1250エピソード，重さ7.24 kg の投擲物を遠投するための投擲フォームは4000エピソードを採用した．
+\fig{4.2.eps}{width=1.0\hsize}{Reward progress in 2D Rigid 2 Links（left: 0.14 kg thrown object，right: 7.24 kg thrown object）}
+\subsection{結果・考察}
+$\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期状態をいずれも0とした際の投擲物の重さに応じた遠投をするための投擲フォーム戦略の結果・考察について述べる．
+\figref{4.3.eps}は強化学習により最適化した，重さ0.14 kg の投擲物を遠投するための投擲フォーム，\figref{4.4.eps}は強化学習により最適化した，重さ7.24 kg の投擲物を遠投するための投擲フォームである．投擲フォームは投擲開始からリリースまでとし，リリース時の姿勢は黒の太枠で囲まれたものである．図中の青リンク，橙リンクがそれぞれ上腕リンク，前腕リンクに対応し，赤線が手先の軌跡を示す．リリース瞬間の肩関節と肘関節の角度，手先速度，投射角を\tabref{4.3}に示す．2つの投擲フォームの比較により，リリース時の肩関節の角度と軌跡の径の大きさに違いがみられた．\\
+\begin{table}[tb]
+  \begin{center}
+    \caption{Data at the release moment of 2D Rigid 2 Links（0.14 kg vs 7.24 kg）}
+    \tablabel{4.3}
+    \begin{tabular}{c|c|c|c}
+      \hline
+      Parameters & Unit & Values of 0.14 kg & Values of 7.24 kg \\
+      \hline
+      $\theta_{1}$ & deg & $-313.96$ & $-354.51$ \\
+      $\theta_{2}$ & deg & 87.71 & 132.32 \\
+      $v_{2}$ & m/s & 10.24 & 5.46 \\
+      $\theta_{v}$ & deg & 43.76 & 47.81 \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+　また，\figref{4.5.eps}は投擲開始からリリースまでの肩関節・肘関節のトルクの推移，\figref{4.6.eps}は投擲開始からリリースまでの肩関節・肘関節の角速度の推移である．\figref{4.5.eps}，\figref{4.6.eps}の左図が重さ0.14 kg の投擲物を遠投するための投擲フォームの各時系列，右図が重さ7.24 kg の投擲物を遠投するための投擲フォームの各時系列である．\\
+　トルクの時系列より，重さ0.14 kg の投擲物を遠投するための投擲フォームは，肩関節と肘関節の運動連鎖を活かした投擲フォーム戦略の傾向がみられた．投擲開始からまず肩関節のトルクによって腕を回転させる．その後，約0.13 s で肩関節のトルクが腕の回転とは逆方向にトルクが生じ，肘関節のトルクが腕の回転と同方向にトルクが生じリリースを迎える．これは肩関節のエネルギーを肘関節に伝達することでより手先方向のエネルギーを大きくしていると考えられる．また，肩関節と肘関節の角速度の推移より，トルクの入力に運動連鎖の傾向がみられる約0.13 s から肩関節の角速度が減少し肘関節の角速度が増加する．リリース時には肩関節と肘関節の角速度が逆転していることから最後は前腕の振りを如何に大きくするのかが重要であると考えられる．一方，重さ7.24 kg の投擲物を遠投するための投擲フォームは，肩関節による影響が大きい投擲フォームの傾向がみられた．投擲開始から肩関節のトルクによって腕を回転させる傾向は重さ0.14 kg の投擲物の際と同様であるが，肩関節のトルクが0となる瞬間が数回生じ，また肘関節のトルクは肘を屈曲させる方向に生じ続けている．これは，肩関節のトルクによる腕の回転はペナルティである累積消費エネルギーへの影響が大きく，消費を抑制するためであると考えられる．また，肘関節のトルクによって肘を屈曲させ続ける傾向にある理由として，モーメントアームを小さくすることで肩の回転に消費するエネルギーを抑制するためであると考えられる．加えて肩関節と肘関節の角速度の推移より，肘関節の角速度が正となるのが遅く，リリースの瞬間も肩関節の角速度が肘関節の角速度より大きい．すなわち，肩関節の影響が重さ0.14 kg の投擲物を遠投する際よりも大きいと考えられる．\\
+\fig{4.3.eps}{width=1.0\hsize}{Throwing form from start to release of 2D Rigid 2 Links（0.14 kg thrown object，\\1.72 m tall human）}
+\fig{4.4.eps}{width=1.0\hsize}{Throwing form from start to release of 2D Rigid 2 Links（7.24 kg thrown object，\\1.72 m tall human）}
+\figp{4.5.eps}{width=1.0\hsize}{Transition of shoulder and elbow torque from start to release of 2D Rigid 2 Links\\（left: 0.14 kg thrown object，right: 7.24 kg thrown object）}
+\figp{4.6.eps}{width=1.0\hsize}{Transition of shoulder and elbow angular velocity from start to release of 2D Rigid 2 Links（left: 0.14 kg thrown object，right: 7.24 kg thrown object）}
+\section{腕の長さに応じた最適投擲フォームの比較}
+\subsection{シミュレーション設定}
+本検証で用いたパラメータを\tabref{4.4}に示す．身体のサイズは，身長1.72 m，体重70 kgの人間と，身長1.90 m，体重70 kg の各部位のサイズとした．
+投擲物は，野球の硬式球を参考に，0.14 kgとした．
+\begin{table}[tb]
+  \begin{center}
+    \caption{Parameters which are used for 2D Rigid 2 Links simulation（1.72 m vs 1.90 m）}
+    \tablabel{4.4}
+    \begin{tabular}{c|c|c}
+      \hline
+      Parameters & Unit & Values \\
+      \hline
+      $l_{1}$ & m & 0.32 or 0.35 \\
+      $l_{2}$ & m & 0.44 or 0.48 \\
+      $l_{f}$ & m & 0.25 or 0.28 \\
+      $l_{h}$ & m & 0.19 or 0.20 \\
+      $m_{f}$ & kg & 1.12 \\
+      $m_{h}$ & kg & 0.42 \\
+      $m_{o}$ & kg & 0.14 \\
+      $m_{1}$ & kg & 1.96 \\
+      $m_{2}$ & kg & 1.68 \\
+      $b_{1}$ &  & 0.05 \\
+      $b_{2}$ &  & 0.01 \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+身長1.72 m の人間に基づいた腕の長さでの投擲の際と身長1.90 m の人間に基づいた腕の長さでの投擲の際の，それぞれの各リンクの重心までの長さ、慣性モーメント、各関節にかかるトルクを\tabref{4.5}に示す．重力加速度，可動範囲の端での肘関節に加算するトルクは，4.4.1節と同様の設定とした．
+\begin{table}[tb]
+  \begin{center}
+    \caption{Calculation results of $l_{g1}$,$l_{g2}$,$I_{1}$,$I_{2}$ for 2D Rigid 2 Links（1.72 m vs 1.90 m）}
+    \tablabel{4.5}
+    \begin{tabular}{c|c|c|c}
+      \hline
+      Parameters & Unit & Values of 1.72 m & Values of 1.90 m \\
+      \hline
+      $l_{g1}$ & m & 0.16 & 0.18 \\
+      $l_{g2}$ & m & 0.21 & 0.23 \\
+      $I_{1}$ & kg$\cdot$$\mathrm{m}^2$ & 0.017 & 0.018 \\
+      $I_{2}$ & kg$\cdot$$\mathrm{m}^2$ & 0.020 & 0.099 \\
+      $\tau_{1}$ & N$\cdot$m & $-16, 0, +16$ & $-18, 0, +18$ \\
+      $\tau_{2}$ & N$\cdot$m & $-10, 0, +10$ & $-11, 0, +11$ \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+腕の長さに応じた投擲フォームの強化学習を行った際の報酬の遷移を\figref{4.4.eps}に示す．身長1.72 m の人間に基づいた腕の長さによる投擲フォームは1250エピソード，身長1.90 m の人間に基づいた腕の長さによる投擲フォームは2070エピソードを採用した．
+
+\figt{4.7.eps}{width=1.0\hsize}{Reward progress in 2D Rigid 2 Links（left:1.72 m tall human，right:1.90 m tall human）}
+
+\subsection{結果・考察}
+$\theta_{1}$，$\theta_{2}$，$\dot{\theta}_{1}$，$\dot{\theta}_{2}$の初期状態をいずれも0とした際の腕の長さに応じた遠投をするための投擲フォーム戦略の結果・考察について述べる．
+\figref{4.2.eps}は強化学習により最適化した，身長1.72 m の人間に基づいた腕の長さによる遠投をするための投擲フォーム，\figref{4.8.eps}は強化学習により最適化した，身長1.90 m の人間に基づいた腕の長さによる遠投をするための投擲フォームである．投擲フォームは投擲開始からリリースまでとし，リリース時の姿勢は黒の太枠で囲まれたものである．図中の青リンク，橙リンクがそれぞれ上腕リンク，前腕リンクに対応し，赤線が手先の軌跡を示す．リリース瞬間の肩関節と肘関節の角度，手先速度，投射角を\tabref{4.6}に示す．2つの投擲フォームの比較により，投擲物の重さによる比較と同様に，リリース時の肩関節の角度と軌跡の径の大きさに違いがみられた．
+\begin{table}[tb]
+  \begin{center}
+    \caption{Data at the release moment of 2D Rigid 2 Links（1.72 m vs 1.90 m）}
+    \tablabel{4.6}
+    \begin{tabular}{c|c|c|c}
+      \hline
+      Parameters & Unit & Values of 1.72 m & Values of 1.90 m \\
+      \hline
+      $\theta_{1}$ & deg & $-313.96$ & $-338.49$ \\
+      $\theta_{2}$ & deg & 87.71 & 119.67 \\
+      $v_{2}$ & m/s & 10.24 & 13.95 \\
+      $\theta_{v}$ & deg & 43.76 & 51.18 \\
+      \hline
+    \end{tabular}
+  \end{center}
+\end{table}
+また，\figref{4.9.eps}は投擲開始からリリースまでの肩関節・肘関節のトルクの推移，\figref{4.10.eps}は投擲開始からリリースまでの肩関節・肘関節の角速度の推移である．\figref{4.9.eps}，\figref{4.10.eps}の左図が身長1.72 m の人間に基づいた腕の長さによる遠投をするための投擲フォームの各時系列，右図が身長1.90 m の人間に基づいた腕の長さによる遠投をするための投擲フォームの各時系列である．\\
+　トルクの時系列より，身長1.90 m の人間に基づいた腕の長さによる遠投をするための投擲フォームは，身長1.72 m の人間に基づいた腕の長さによる遠投をするための投擲フォームと同様に運動連鎖を活かした投擲フォーム戦略の傾向がみられた．しかし，投擲開始から肩関節のトルクによって腕を回転させる傾向は同様であるが，身長1.90 m の人間に基づいた腕の長さによる遠投をするための投擲フォームは肘関節のトルクを腕の回転方向とは反対の，肘関節を屈曲させる方向へ生じさせている．これはモーメントアームによる影響が考えられる．モーメントアームが大きいと腕の回転に必要な肩関節のトルクが大きくなるが，その分エネルギーを消費する．今回設定したトルクの大きさでは，肘を伸ばしたまま腕を回転させるよりも肘を屈曲してモーメントアームを小さくして腕を回転させる方がエネルギー消費が少なく腕を回転させることができると考えられる．また，腕の長さに問わずリリース時には肘関節の角速度が肩関節の角速度を上回ることから，リリース直前に運動連鎖によってより肘関節の角速度を大きくしようとすると考えられる．
+
+\figp{4.8.eps}{width=1.0\hsize}{Throwing form from start to release of 2D Rigid 2 Links（0.14 kg thrown object，\\1.90 m tall human）}
+\clearpage
+\figp{4.9.eps}{width=1.0\hsize}{Transition of shoulder and elbow torque from start to release of 2D Rigid 2 Links（left:1.72 m tall human，right:1.90 m tall human）}
+\figp{4.10.eps}{width=1.0\hsize}{Transition of shoulder and elbow angular velocity from start to release of 2D Rigid 2 Links（left:1.72 m tall human，right:1.90 m tall human）}
+
+\section{3次元剛体2リンクによるパラメータに応じた投擲フォームの導出・比較と戦略の考察}
+\section{結論および今後の展望}
 
 
 %% \begin{thebibliography}{99}
