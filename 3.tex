@@ -8,38 +8,38 @@
 \fig{3.1.eps}{width=1.0\hsize}{Rigid 1 Link}
 
 ラグランジュの方法\cite{lagrange}を用いて導いた剛体1リンクの運動方程式は，次の通りである．\\
-$l_{g}$を重心までの長さとすると，リンクの重心位置$o_{s}$は，
+$l_{\mathrm{g}}$を重心までの長さとすると，リンクの重心位置$o_{\mathrm{s}}$は，
 
 \begin{eqnarray}
-  o_{s} = 
+  o_{\mathrm{s}} = 
               \begin{bmatrix}
-              l_{g}\cos\theta\\
-              l_{g}\sin\theta
+              l_{\mathrm{g}}\cos\theta\\
+              l_{\mathrm{g}}\sin\theta
               \end{bmatrix}
 \end{eqnarray}
 
 微分すると，
 
 \begin{eqnarray}
-  o_{\dot{s}} = 
+  o_{\mathrm{\dot{s}}} = 
               \begin{bmatrix}
-              -l_{g}\sin\theta \cdot \dot{\theta}\\
-              l_{g}\cos\theta \cdot \dot{\theta}
+              -l_{\mathrm{g}}\sin\theta \cdot \dot{\theta}\\
+              l_{\mathrm{g}}\cos\theta \cdot \dot{\theta}
               \end{bmatrix}
 \end{eqnarray}
 
-リンク重さを$m$とすると，剛体1リンクの並進運動エネルギー$E_{t}$は，
+リンク重さを$m$とすると，剛体1リンクの並進運動エネルギー$E_{\mathrm{t}}$は，
 
 \begin{eqnarray}
-  E_{t} 
-  &=&\frac{1}{2}mo_{\dot{s}}{}^T\!o_{\dot{s}} \nonumber \\
-  &=&\frac{1}{2}m{l_{g}}^2{\dot{\theta}}^2
+  E_{\mathrm{t}} 
+  &=&\frac{1}{2}mo_{\mathrm{\dot{s}}}{}^\mathrm{T}\!o_{\mathrm{\dot{s}}} \nonumber \\
+  &=&\frac{1}{2}m{l_{\mathrm{g}}}^2{\dot{\theta}}^2
 \end{eqnarray}
 
-同様に，リンク重心周りの慣性モーメントを$I$とすると，回転運動エネルギー$E_{k}$は，
+同様に，リンク重心周りの慣性モーメントを$I$とすると，回転運動エネルギー$E_{\mathrm{r}}$は，
 
 \begin{eqnarray}
-  E_{r} 
+  E_{\mathrm{r}} 
   =\frac{1}{2}I{\dot{\theta}}^2
 \end{eqnarray}
 
@@ -47,15 +47,15 @@ $l_{g}$を重心までの長さとすると，リンクの重心位置$o_{s}$は
 
 \begin{eqnarray}
   T
-  &=&E_{t} + E_{r} \nonumber \\
-  &=&\frac{1}{2}{\dot{\theta}}^2(m{l_{g}}^2 + I)
+  &=&E_{\mathrm{t}} + E_{\mathrm{r}} \nonumber \\
+  &=&\frac{1}{2}{\dot{\theta}}^2(m{l_{\mathrm{g}}}^2 + I)
 \end{eqnarray}
 
 位置エネルギー$T$は，
 
 \begin{eqnarray}
   U
-  = mgl_{g}\sin\theta
+  = mgl_{\mathrm{g}}\sin\theta
 \end{eqnarray}
 
 ここで，ラグランジュ関数$L$を
@@ -82,11 +82,11 @@ $l_{g}$を重心までの長さとすると，リンクの重心位置$o_{s}$は
 このとき，
 
 \begin{eqnarray}
-  M = I + m{l_{g}}^2
+  M = I + m{l_{\mathrm{g}}}^2
 \end{eqnarray}
 
 \begin{eqnarray}
-  g(\theta) = mgl_{g}\cos\theta
+  g(\theta) = mgl_{\mathrm{g}}\cos\theta
 \end{eqnarray}
 
 \begin{eqnarray}
